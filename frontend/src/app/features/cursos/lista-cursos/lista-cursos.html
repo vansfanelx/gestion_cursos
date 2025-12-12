@@ -1,0 +1,109 @@
+<div class="cursos-container">
+  <header class="page-header">
+    <h1>📚 Gestión de Cursos</h1>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Buscar por nombre, descripción o profesor..."
+        class="search-input"
+      />
+      <span class="search-icon">🔍</span>
+    </div>
+    @if (canEdit()) {
+      <button class="btn-add" [routerLink]="'nuevo'">
+        ➕ Nuevo Curso
+      </button>
+    }
+  </div>
+
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando cursos...</p>
+    </div>
+  } @else if (error) {
+    <div class="error-message">
+      <p>{{ error }}</p>
+      <button (click)="loadCursos()">Reintentar</button>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="cursos-table">
+        <thead>
+          <tr>
+            <th>Curso</th>
+            <th>Descripción</th>
+            <th>Profesor</th>
+            <th>Duración</th>
+            <th class="actions-header">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (curso of cursos | searchFilter: searchText : ['nombre', 'descripcion', 'profesor.name']; track curso.id) {
+            <tr>
+              <td>
+                <div class="curso-name">
+                  <span class="curso-icon">📚</span>
+                  <strong>{{ curso.nombre }}</strong>
+                </div>
+              </td>
+              <td class="descripcion-cell">{{ curso.descripcion }}</td>
+              <td>
+                @if (curso.profesor) {
+                  <div class="profesor-info">
+                    <span class="profesor-icon">👨‍🏫</span>
+                    {{ curso.profesor.name }}
+                  </div>
+                } @else {
+                  <span class="text-muted">Sin asignar</span>
+                }
+              </td>
+              <td>
+                <span class="duracion-badge">{{ curso.duracion }}h</span>
+              </td>
+              <td class="actions-cell">
+                <div class="action-buttons">
+                  <button class="btn-icon btn-view" (click)="verDetalle(curso.id)" title="Ver detalles">
+                    👁️
+                  </button>
+                  @if (canEdit()) {
+                    <button class="btn-icon btn-edit" [routerLink]="['editar', curso.id]" title="Editar">
+                      ✏️
+                    </button>
+                  }
+                  @if (canDelete()) {
+                    <button class="btn-icon btn-delete" (click)="deleteCurso(curso.id, curso.nombre)" title="Eliminar">
+                      🗑️
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty-state">
+                <p>No se encontraron cursos</p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Modal de confirmación -->
+<app-confirm-modal
+  [show]="showModal"
+  [title]="modalData.title"
+  [message]="modalData.message"
+  [confirmText]="'Sí, eliminar'"
+  [cancelText]="'Cancelar'"
+  [danger]="true"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()"
+></app-confirm-modal>

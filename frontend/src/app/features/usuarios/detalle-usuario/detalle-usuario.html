@@ -1,0 +1,69 @@
+<div class="detalle-container">
+  <div class="detalle-header">
+    <h1>👤 Detalle de Usuario</h1>
+    <button class="btn-back" (click)="volver()">← Volver</button>
+  </div>
+
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando usuario...</p>
+    </div>
+  } @else if (error) {
+    <div class="error-box">
+      <p>{{ error }}</p>
+      <button class="btn-retry" (click)="loadUsuario(usuario?.id)">Reintentar</button>
+    </div>
+  } @else if (usuario) {
+    <div class="usuario-detalle">
+      <div class="detalle-card">
+        <div class="card-header">
+          <div class="icon-wrapper">
+            <span class="user-icon-large">👤</span>
+          </div>
+          <div class="header-info">
+            <h2>{{ usuario.name }}</h2>
+            <span class="badge" [ngClass]="getRoleClass(usuario.role)">
+              {{ getRoleLabel(usuario.role) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="info-section">
+            <h3>📋 Información General</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <label>ID:</label>
+                <span>{{ usuario.id }}</span>
+              </div>
+              <div class="info-item">
+                <label>Nombre:</label>
+                <span>{{ usuario.name }}</span>
+              </div>
+              <div class="info-item">
+                <label>Email:</label>
+                <span>{{ usuario.email }}</span>
+              </div>
+              <div class="info-item">
+                <label>Rol:</label>
+                <span class="badge" [ngClass]="getRoleClass(usuario.role)">
+                  {{ getRoleLabel(usuario.role) }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn-edit" [routerLink]="['/usuarios/editar', usuario.id]">
+              ✏️ Editar Usuario
+            </button>
+            <button class="btn-cancel" (click)="volver()">
+              Volver a la lista
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

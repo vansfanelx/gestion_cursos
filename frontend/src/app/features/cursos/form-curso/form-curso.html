@@ -1,0 +1,113 @@
+<div class="form-container">
+  <header class="form-header">
+    <h1>{{ isEditMode ? 'Editar' : 'Nuevo' }} Curso</h1>
+    <button class="btn-back" [routerLink]="'/cursos'">← Volver</button>
+  </header>
+
+  @if (error) {
+    <div class="alert alert-error">
+      {{ error }}
+    </div>
+  }
+
+  <form [formGroup]="cursoForm" (ngSubmit)="onSubmit()" class="curso-form">
+    <div class="form-group">
+      <label for="nombre">Nombre del Curso *</label>
+      <input
+        type="text"
+        id="nombre"
+        formControlName="nombre"
+        class="form-control"
+        [class.invalid]="f['nombre'].invalid && f['nombre'].touched"
+      />
+      @if (f['nombre'].invalid && f['nombre'].touched) {
+        <div class="error-message">
+          @if (f['nombre'].errors?.['required']) {
+            El nombre es requerido
+          }
+          @if (f['nombre'].errors?.['minlength']) {
+            El nombre debe tener al menos 3 caracteres
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion">Descripción *</label>
+      <textarea
+        id="descripcion"
+        formControlName="descripcion"
+        class="form-control"
+        rows="4"
+        [class.invalid]="f['descripcion'].invalid && f['descripcion'].touched"
+      ></textarea>
+      @if (f['descripcion'].invalid && f['descripcion'].touched) {
+        <div class="error-message">
+          @if (f['descripcion'].errors?.['required']) {
+            La descripción es requerida
+          }
+          @if (f['descripcion'].errors?.['minlength']) {
+            La descripción debe tener al menos 10 caracteres
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="duracion">Duración (horas) *</label>
+        <input
+          type="number"
+          id="duracion"
+          formControlName="duracion"
+          class="form-control"
+          min="1"
+          [class.invalid]="f['duracion'].invalid && f['duracion'].touched"
+        />
+        @if (f['duracion'].invalid && f['duracion'].touched) {
+          <div class="error-message">
+            @if (f['duracion'].errors?.['required']) {
+              La duración es requerida
+            }
+            @if (f['duracion'].errors?.['min']) {
+              La duración debe ser mayor a 0
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="profesor_id">Profesor *</label>
+        <select
+          id="profesor_id"
+          formControlName="profesor_id"
+          class="form-control"
+          [class.invalid]="f['profesor_id'].invalid && f['profesor_id'].touched"
+        >
+          <option value="">Seleccione un profesor</option>
+          @for (profesor of profesores; track profesor.id) {
+            <option [value]="profesor.id">{{ profesor.name }}</option>
+          }
+        </select>
+        @if (f['profesor_id'].invalid && f['profesor_id'].touched) {
+          <div class="error-message">
+            Debe seleccionar un profesor
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="cancel()" [disabled]="loading">
+        Cancelar
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="loading">
+        @if (loading) {
+          Guardando...
+        } @else {
+          {{ isEditMode ? 'Actualizar' : 'Crear' }} Curso
+        }
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,126 @@
+<div class="inscripciones-container">
+  <header class="page-header">
+    <h1>✍️ Gestión de Inscripciones</h1>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Buscar por estudiante, curso o profesor..."
+        class="search-input"
+      />
+      <span class="search-icon">🔍</span>
+    </div>
+    <div class="toolbar-actions">
+      <select [(ngModel)]="filtroEstado" class="filter-select">
+        <option value="todos">Todos los estados</option>
+        <option value="inscrito">Inscrito</option>
+        <option value="en_progreso">En Progreso</option>
+        <option value="completado">Completado</option>
+        <option value="abandonado">Abandonado</option>
+      </select>
+      <button class="btn-add" [routerLink]="'/inscripciones/nuevo'">
+        ➕ Nueva Inscripción
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando inscripciones...</p>
+    </div>
+  } @else if (error) {
+    <div class="error-message">
+      <p>{{ error }}</p>
+      <button (click)="loadInscripciones()">Reintentar</button>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="inscripciones-table">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Curso</th>
+            <th>Profesor</th>
+            <th>Estado</th>
+            <th>Nota Final</th>
+            <th>Fecha</th>
+            <th class="actions-header">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (filteredInscripciones.length === 0) {
+            <tr>
+              <td colspan="7" class="empty-state">
+                No se encontraron inscripciones
+              </td>
+            </tr>
+          } @else {
+            @for (inscripcion of filteredInscripciones; track inscripcion.id) {
+              <tr>
+                <td>
+                  <div class="user-info">
+                    <span class="user-icon">👤</span>
+                    <strong>{{ inscripcion.estudiante?.name || 'Sin nombre' }}</strong>
+                  </div>
+                </td>
+                <td>
+                  <div class="curso-info">
+                    <span class="curso-icon">📚</span>
+                    {{ inscripcion.curso?.nombre || 'Sin curso' }}
+                  </div>
+                </td>
+                <td>
+                  <div class="profesor-info">
+                    <span class="profesor-icon">👨‍🏫</span>
+                    {{ inscripcion.curso?.profesor?.name || 'Sin profesor' }}
+                  </div>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="getEstadoBadgeClass(inscripcion.estado)">
+                    {{ getEstadoLabel(inscripcion.estado) }}
+                  </span>
+                </td>
+                <td>
+                  @if (inscripcion.nota_final !== null && inscripcion.nota_final !== undefined) {
+                    <span class="nota">{{ inscripcion.nota_final }}</span>
+                  } @else {
+                    <span class="nota-pendiente">Pendiente</span>
+                  }
+                </td>
+                <td>{{ inscripcion.fecha_inscripcion | date: 'dd/MM/yyyy' }}</td>
+                <td class="actions-cell">
+                  <div class="action-buttons">
+                    <button class="btn-icon btn-view" (click)="verDetalle(inscripcion.id)" title="Ver detalles">
+                      👁️
+                    </button>
+                    <button class="btn-icon btn-edit" (click)="editInscripcion(inscripcion.id)" title="Editar">
+                      ✏️
+                    </button>
+                    <button class="btn-icon btn-delete" (click)="deleteInscripcion(inscripcion.id)" title="Eliminar">
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<app-confirm-modal
+  [show]="showDeleteModal"
+  [title]="'Eliminar Inscripción'"
+  [message]="'¿Estás seguro de que deseas eliminar esta inscripción?'"
+  [confirmText]="'Eliminar'"
+  [cancelText]="'Cancelar'"
+  [danger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>

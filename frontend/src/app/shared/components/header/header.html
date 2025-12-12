@@ -1,0 +1,36 @@
+<header class="app-header">
+  <div class="header-content">
+    <!-- Toggle Button -->
+    <button class="toggle-btn" (click)="handleToggle()" aria-label="Toggle Menu">
+      @if (isMobileOpen$ | async) {
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      } @else {
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12h18M3 6h18M3 18h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      }
+    </button>
+
+    <!-- Greeting / Title -->
+    <div class="header-title">
+      <h1>{{ greeting }}, {{ currentUser?.name }}! 👋</h1>
+      <p>Rol: <span class="role-badge">{{ userRole }}</span></p>
+    </div>
+
+    <!-- User Info (Desktop) -->
+    <div class="user-section">
+      <div class="user-details">
+        <span class="user-email">{{ currentUser?.email }}</span>
+      </div>
+      <div class="user-avatar-small">
+        @if (currentUser) {
+          {{ (currentUser.name || 'U').charAt(0).toUpperCase() }}
+        } @else {
+          U
+        }
+      </div>
+    </div>
+  </div>
+</header>

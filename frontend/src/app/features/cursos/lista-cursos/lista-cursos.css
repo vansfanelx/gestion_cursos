@@ -1,0 +1,321 @@
+.cursos-container {
+  padding: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #edf1f7;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #222b45;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.search-box {
+  flex: 1;
+  max-width: 400px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.65rem 2.5rem 0.65rem 1rem;
+  border: 1px solid #edf1f7;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #8f9bb3;
+}
+
+.btn-add {
+  padding: 0.65rem 1.25rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-add:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0.5rem 1rem rgba(102, 126, 234, 0.3);
+}
+
+.loading, .error-message {
+  text-align: center;
+  padding: 2rem;
+}
+
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 0.75rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+}
+
+.error-message button {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+/* Estilos de tabla */
+.table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0.5rem 1rem 0 rgba(44,51,73,0.1);
+  overflow: hidden;
+  border: 1px solid #edf1f7;
+}
+
+.cursos-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.cursos-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.cursos-table th {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.cursos-table th.actions-header {
+  text-align: center;
+}
+
+.cursos-table tbody tr {
+  border-bottom: 1px solid #edf1f7;
+  transition: background-color 0.15s ease;
+}
+
+.cursos-table tbody tr:hover {
+  background-color: #f7f9fc;
+}
+
+.cursos-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.cursos-table td {
+  padding: 0.875rem 1rem;
+  vertical-align: middle;
+  color: #222b45;
+}
+
+.curso-name {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 600;
+  color: #222b45;
+  font-size: 0.9rem;
+}
+
+.curso-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.descripcion-cell {
+  color: #8f9bb3;
+  max-width: 350px;
+  line-height: 1.4;
+  font-size: 0.85rem;
+}
+
+.profesor-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #222b45;
+  font-size: 0.875rem;
+}
+
+.profesor-icon {
+  font-size: 1rem;
+}
+
+.text-muted {
+  color: #c5cee0;
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.duracion-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.actions-cell {
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.btn-icon {
+  padding: 0.4rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.15s ease;
+  background-color: transparent;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon.btn-view {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.btn-icon.btn-view:hover {
+  background-color: #1976d2;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-icon.btn-edit {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.btn-icon.btn-edit:hover {
+  background-color: #f57c00;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-icon.btn-delete {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.btn-icon.btn-delete:hover {
+  background-color: #c62828;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #8f9bb3;
+  font-size: 0.9rem;
+}
+
+/* Responsivo */
+@media (max-width: 1024px) {
+  .cursos-table {
+    font-size: 0.875rem;
+  }
+  
+  .cursos-table th,
+  .cursos-table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .descripcion-cell {
+    max-width: 250px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-box {
+    max-width: none;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .cursos-table {
+    min-width: 700px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}

@@ -1,0 +1,103 @@
+<div class="usuarios-container">
+  <header class="page-header">
+    <h1>👥 Gestión de Usuarios</h1>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Buscar por nombre, email o rol..."
+        class="search-input"
+      />
+      <span class="search-icon">🔍</span>
+    </div>
+    <div class="toolbar-actions">
+      <select [(ngModel)]="filtroRole" class="filter-select">
+        <option value="todos">Todos los roles</option>
+        <option value="admin">Administradores</option>
+        <option value="profesor">Profesores</option>
+        <option value="estudiante">Estudiantes</option>
+      </select>
+      <button class="btn-add" [routerLink]="'/usuarios/nuevo'">
+        ➕ Nuevo Usuario
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando usuarios...</p>
+    </div>
+  } @else if (error) {
+    <div class="error-message">
+      <p>{{ error }}</p>
+      <button (click)="loadUsuarios()">Reintentar</button>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="usuarios-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th class="actions-header">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (usuariosFiltrados.length === 0) {
+            <tr>
+              <td colspan="4" class="empty-state">
+                No se encontraron usuarios
+              </td>
+            </tr>
+          } @else {
+            @for (usuario of usuariosFiltrados; track usuario.id) {
+              <tr>
+                <td>
+                  <div class="user-info">
+                    <span class="user-icon">👤</span>
+                    <strong>{{ usuario.name }}</strong>
+                  </div>
+                </td>
+                <td>{{ usuario.email }}</td>
+                <td>
+                  <span class="badge" [class]="getRoleClass(usuario.role)">
+                    {{ getRoleLabel(usuario.role) }}
+                  </span>
+                </td>
+                <td class="actions-cell">
+                  <div class="action-buttons">
+                    <button class="btn-icon btn-view" (click)="verDetalle(usuario.id)" title="Ver detalles">
+                      👁️
+                    </button>
+                    <button class="btn-icon btn-edit" (click)="editUsuario(usuario.id)" title="Editar">
+                      ✏️
+                    </button>
+                    <button class="btn-icon btn-delete" (click)="deleteUsuario(usuario.id, usuario.name)" title="Eliminar">
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<app-confirm-modal
+  [show]="showDeleteModal"
+  [title]="'Eliminar Usuario'"
+  [message]="userToDelete ? '¿Estás seguro de eliminar al usuario ' + userToDelete.name + '?' : '¿Estás seguro?'"
+  [confirmText]="'Eliminar'"
+  [cancelText]="'Cancelar'"
+  [danger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-confirm-modal>

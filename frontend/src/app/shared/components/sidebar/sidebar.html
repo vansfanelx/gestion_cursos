@@ -1,0 +1,98 @@
+<aside 
+  class="sidebar"
+  [class.expanded]="isExpanded$ | async"
+  [class.mobile-open]="isMobileOpen$ | async">
+  
+  <!-- Logo -->
+  <div class="sidebar-header">
+    @if (isExpanded$ | async) {
+      <div class="logo">
+        <span class="logo-icon">🎓</span>
+        <span class="logo-text">Sistema Cursos</span>
+      </div>
+    } @else {
+      <div class="logo-collapsed">
+        <span class="logo-icon">🎓</span>
+      </div>
+    }
+  </div>
+
+  <!-- User Profile -->
+  <div class="user-profile">
+    <div class="user-avatar">{{ userInitial }}</div>
+    @if (isExpanded$ | async) {
+      <div class="user-info">
+        <p class="user-name">{{ currentUser?.name }}</p>
+        <span class="user-role">{{ userRole }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Navigation -->
+  <nav class="sidebar-nav">
+    <ul class="menu-list">
+      @for (item of menuItems; track item.label) {
+        <li class="menu-item">
+          @if (item.subItems) {
+            <!-- Menu with submenu -->
+            <button 
+              class="menu-link"
+              [class.active]="isSubmenuOpen(item)"
+              (click)="toggleSubmenu(item)">
+              <span class="menu-icon">{{ item.icon }}</span>
+              @if (isExpanded$ | async) {
+                <span class="menu-label">{{ item.label }}</span>
+                <span class="submenu-arrow" [class.rotated]="isSubmenuOpen(item)">▼</span>
+              }
+            </button>
+            
+            @if (isSubmenuOpen(item) && (isExpanded$ | async)) {
+              <ul class="submenu">
+                @for (subItem of item.subItems; track subItem.label) {
+                  @if (canAccess(subItem.roles)) {
+                    <li>
+                      <a 
+                        [routerLink]="subItem.route"
+                        routerLinkActive="active"
+                        class="submenu-link"
+                        (click)="navigate(subItem.route)">
+                        {{ subItem.label }}
+                      </a>
+                    </li>
+                  }
+                }
+              </ul>
+            }
+          } @else {
+            <!-- Direct link -->
+            <a 
+              [routerLink]="item.route"
+              routerLinkActive="active"
+              class="menu-link"
+              (click)="navigate(item.route!)">
+              <span class="menu-icon">{{ item.icon }}</span>
+              @if (isExpanded$ | async) {
+                <span class="menu-label">{{ item.label }}</span>
+              }
+            </a>
+          }
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <!-- Logout Button -->
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="logout()">
+      <span class="menu-icon">🚪</span>
+      @if (isExpanded$ | async) {
+        <span class="menu-label">Cerrar Sesión</span>
+      }
+    </button>
+  </div>
+</aside>
+
+<!-- Mobile Overlay -->
+@if (isMobileOpen$ | async) {
+  <div class="sidebar-overlay" (click)="sidebarService.closeMobile()"></div>
+}

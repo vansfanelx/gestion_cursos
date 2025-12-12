@@ -1,0 +1,83 @@
+<div class="detalle-container">
+  <header class="detalle-header">
+    <h1>📚 Detalle del Curso</h1>
+    <button class="btn-back" (click)="volver()">← Volver a la lista</button>
+  </header>
+
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando información del curso...</p>
+    </div>
+  } @else if (error) {
+    <div class="error-box">
+      <p>{{ error }}</p>
+      <button class="btn-primary" (click)="volver()">Volver</button>
+    </div>
+  } @else if (curso) {
+    <div class="curso-detalle">
+      <div class="detalle-card">
+        <div class="card-header">
+          <div class="icon-wrapper">
+            <span class="curso-icon">📚</span>
+          </div>
+          <div class="header-info">
+            <h2>{{ curso.nombre }}</h2>
+            <span class="badge-duracion">⏱️ {{ curso.duracion }} horas</span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="info-section">
+            <h3>📝 Descripción</h3>
+            <p class="descripcion">{{ curso.descripcion }}</p>
+          </div>
+
+          @if (curso.profesor) {
+            <div class="info-section">
+              <h3>👨‍🏫 Profesor Asignado</h3>
+              <div class="profesor-info">
+                <div class="profesor-avatar">{{ curso.profesor.name.charAt(0) }}</div>
+                <div class="profesor-data">
+                  <p class="profesor-nombre">{{ curso.profesor.name }}</p>
+                  <p class="profesor-email">✉️ {{ curso.profesor.email }}</p>
+                </div>
+              </div>
+            </div>
+          }
+
+          <div class="info-section">
+            <h3>ℹ️ Información Adicional</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">ID del Curso:</span>
+                <span class="value">#{{ curso.id }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Duración:</span>
+                <span class="value">{{ curso.duracion }} horas</span>
+              </div>
+              @if (curso.created_at) {
+                <div class="info-item">
+                  <span class="label">Fecha de creación:</span>
+                  <span class="value">{{ curso.created_at | date:'dd/MM/yyyy' }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button class="btn-secondary" (click)="volver()">
+            ← Volver
+          </button>
+          @if (canEdit()) {
+            <button class="btn-primary" (click)="editar()">
+              ✏️ Editar Curso
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

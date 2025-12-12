@@ -1,0 +1,85 @@
+<div class="detalle-container">
+  @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando inscripción...</p>
+    </div>
+  } @else if (error) {
+    <div class="error-message">
+      <p>{{ error }}</p>
+      <button (click)="volver()">Volver</button>
+    </div>
+  } @else if (inscripcion) {
+    <div class="detalle-header">
+      <h1>✍️ Detalle de Inscripción</h1>
+      <div class="header-actions">
+        <button class="btn-secondary" (click)="volver()">← Volver</button>
+        <button class="btn-primary" (click)="editar()">✏️ Editar</button>
+      </div>
+    </div>
+
+    <div class="detalle-content">
+      <div class="info-card">
+        <h2>Información del Estudiante</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">👤 Nombre:</span>
+            <span class="value">{{ inscripcion.estudiante?.name }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">📧 Email:</span>
+            <span class="value">{{ inscripcion.estudiante?.email }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h2>Información del Curso</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">📚 Curso:</span>
+            <span class="value">{{ inscripcion.curso?.nombre }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">👨‍🏫 Profesor:</span>
+            <span class="value">{{ inscripcion.curso?.profesor?.name }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">⏱️ Duración:</span>
+            <span class="value">{{ inscripcion.curso?.duracion }} horas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h2>Estado de la Inscripción</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Estado:</span>
+            <span class="badge" [ngClass]="getEstadoBadgeClass(inscripcion.estado)">
+              {{ getEstadoLabel(inscripcion.estado) }}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="label">📅 Fecha de Inscripción:</span>
+            <span class="value">{{ inscripcion.fecha_inscripcion | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">📊 Nota Final:</span>
+            @if (inscripcion.nota_final !== null && inscripcion.nota_final !== undefined) {
+              <span class="value nota">{{ inscripcion.nota_final }}</span>
+            } @else {
+              <span class="value nota-pendiente">Pendiente</span>
+            }
+          </div>
+          @if (inscripcion.fecha_finalizacion) {
+            <div class="info-item">
+              <span class="label">🏁 Fecha de Finalización:</span>
+              <span class="value">{{ inscripcion.fecha_finalizacion | date: 'dd/MM/yyyy' }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
