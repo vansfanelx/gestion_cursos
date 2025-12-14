@@ -1,6 +1,6 @@
 # 🎓 Sistema de Gestión de Cursos
 
-**Autor:** Jonathan José Jiménez Rojas  
+**Autor:** 
 **GitHub:** [https://github.com/vansfanelx](https://github.com/vansfanelx)  
 **Curso:** Desarrollo de Interfaces  
 **Fecha:** Diciembre 2025
@@ -571,29 +571,29 @@ Content-Type: application/json
 
 ## 📝 Criterios de Evaluación Cumplidos
 
-### Programación Orientada a Objetos (4 puntos)
+### Programación Orientada a Objetos 
 ✅ Arquitectura modular escalable  
 ✅ Separación de responsabilidades (Controllers, Services, Models)  
 ✅ Componentes reutilizables (SearchSelect, ConfirmModal)  
 ✅ Pipes personalizados (FilterPipe, SearchFilterPipe)
 
-### Enrutamiento Dividido (4 puntos)
+### Enrutamiento Dividido 
 ✅ Lazy Loading por módulos funcionales  
 ✅ Rutas protegidas y públicas  
 ✅ Navegación SPA sin recargas
 
-### Guards Múltiples (4 puntos)
+### Guards Múltiples 
 ✅ AuthGuard para rutas autenticadas  
 ✅ RoleGuard para control por rol  
 ✅ Redirecciones apropiadas según permisos
 
-### Integración con API REST (4 puntos)
+### Integración con API REST 
 ✅ HttpClient con Observables  
 ✅ Operaciones CRUD completas  
 ✅ Manejo de errores centralizado  
 ✅ Servicios independientes por entidad
 
-### HttpInterceptor (4 puntos)
+### HttpInterceptor 
 ✅ Inyección automática de JWT  
 ✅ Manejo global de errores HTTP  
 ✅ Redirección automática en token expirado
