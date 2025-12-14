@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Inscripcion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,13 +16,35 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $authUser = Auth::guard('api')->user();
         $query = User::query();
 
-        if ($request->has('role')) {
-            $query->where('role', $request->role);
+        // Profesor solo ve estudiantes inscritos en sus cursos
+        if ($authUser->role === 'profesor') {
+            $estudiantesIds = Inscripcion::whereHas('curso', function($q) use ($authUser) {
+                $q->where('profesor_id', $authUser->id);
+            })->pluck('estudiante_id')->unique()->toArray();
+            
+            $query->whereIn('id', $estudiantesIds);
         }
 
-        $users = $query->get();
+        // Filtro por rol (solo admin puede ver todos los roles)
+        if ($request->has('role') && $authUser->role === 'admin') {
+            $query->where('role', $request->role);
+        } elseif ($authUser->role === 'profesor') {
+            // Profesor solo ve estudiantes
+            $query->where('role', 'estudiante');
+        }
+
+        // Paginación: 15 por página por defecto
+        $perPage = $request->input('per_page', 15);
+        
+        if ($request->boolean('paginate', false)) {
+            $users = $query->orderBy('name')->paginate($perPage);
+        } else {
+            $users = $query->orderBy('name')->get();
+        }
+        
         return response()->json($users);
     }
 
@@ -35,9 +59,16 @@ class UserController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * Solo admin puede crear usuarios
      */
     public function store(Request $request)
     {
+        $authUser = Auth::guard('api')->user();
+        
+        if ($authUser->role !== 'admin') {
+            return response()->json(['message' => 'Solo los administradores pueden crear usuarios'], 403);
+        }
+        
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -64,9 +95,16 @@ class UserController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * Solo admin puede actualizar usuarios
      */
     public function update(Request $request, string $id)
     {
+        $authUser = Auth::guard('api')->user();
+        
+        if ($authUser->role !== 'admin') {
+            return response()->json(['message' => 'Solo los administradores pueden editar usuarios'], 403);
+        }
+        
         $user = User::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
@@ -96,9 +134,16 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * Solo admin puede eliminar usuarios
      */
     public function destroy(string $id)
     {
+        $authUser = Auth::guard('api')->user();
+        
+        if ($authUser->role !== 'admin') {
+            return response()->json(['message' => 'Solo los administradores pueden eliminar usuarios'], 403);
+        }
+        
         $user = User::findOrFail($id);
         $user->delete();
 

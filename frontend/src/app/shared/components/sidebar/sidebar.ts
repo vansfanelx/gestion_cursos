@@ -32,30 +32,44 @@ export class Sidebar {
       route: '/dashboard'
     },
     {
+      label: 'Mis Cursos',
+      icon: '📖',
+      route: '/cursos-disponibles',
+      roles: ['estudiante']
+    },
+    {
       label: 'Cursos',
       icon: '📚',
       subItems: [
         { label: 'Ver Cursos', route: '/cursos' },
-        { label: 'Nuevo Curso', route: '/cursos/nuevo', roles: ['profesor', 'admin'] }
-      ]
+        { label: 'Nuevo Curso', route: '/cursos/nuevo', roles: ['admin'] }
+      ],
+      roles: ['profesor', 'admin']
     },
     {
       label: 'Inscripciones',
       icon: '✍️',
       subItems: [
-        { label: 'Ver Inscripciones', route: '/inscripciones', roles: ['admin'] },
+        { label: 'Ver Inscripciones', route: '/inscripciones' },
+        { label: 'Solicitudes Pendientes', route: '/inscripciones/solicitudes', roles: ['admin'] },
         { label: 'Nueva Inscripción', route: '/inscripciones/nuevo', roles: ['admin'] }
       ],
-      roles: ['admin']
+      roles: ['profesor', 'admin']
+    },
+    {
+      label: 'Mis Estudiantes',
+      icon: '🎓',
+      route: '/usuarios',
+      roles: ['profesor']
     },
     {
       label: 'Usuarios',
       icon: '👥',
       subItems: [
-        { label: 'Ver Usuarios', route: '/usuarios', roles: ['profesor', 'admin'] },
-        { label: 'Nuevo Usuario', route: '/usuarios/nuevo', roles: ['admin'] }
+        { label: 'Ver Usuarios', route: '/usuarios' },
+        { label: 'Nuevo Usuario', route: '/usuarios/nuevo' }
       ],
-      roles: ['profesor', 'admin']
+      roles: ['admin']
     }
   ];
 

@@ -36,15 +36,17 @@ export const routes: Routes = [
         path: 'inscripciones',
         loadChildren: () => import('./features/inscripciones/inscripciones-routing-module').then(m => m.InscripcionesRoutingModule),
         canActivate: [roleGuard],
-        data: { roles: ['admin'] }
-      },
-      {
-        path: 'mis-cursos',
-        redirectTo: 'dashboard'
+        data: { roles: ['profesor', 'admin'] }
       },
       {
         path: 'cursos-disponibles',
-        redirectTo: 'dashboard'
+        loadComponent: () => import('./features/inscripciones/cursos-disponibles/cursos-disponibles').then(m => m.CursosDisponibles),
+        canActivate: [roleGuard],
+        data: { roles: ['estudiante'] }
+      },
+      {
+        path: 'mis-cursos',
+        redirectTo: 'cursos-disponibles'
       },
       {
         path: 'mis-cursos-profesor',

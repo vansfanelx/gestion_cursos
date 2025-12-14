@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Inscripciones, Inscripcion } from '../../../core/services/inscripciones';
+import { Auth } from '../../../core/services/auth';
 import { ConfirmModal } from '../../../shared/components/confirm-modal/confirm-modal';
 
 @Component({
@@ -26,9 +27,22 @@ export class ListaInscripciones implements OnInit {
 
   constructor(
     private inscripcionesService: Inscripciones,
+    private authService: Auth,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
+
+  get isAdmin(): boolean {
+    return this.authService.getUserRole() === 'admin';
+  }
+
+  get isProfesor(): boolean {
+    return this.authService.getUserRole() === 'profesor';
+  }
+
+  get pageTitle(): string {
+    return this.isProfesor ? '✍️ Inscripciones de Mis Cursos' : '✍️ Gestión de Inscripciones';
+  }
 
   ngOnInit(): void {
     const token = localStorage.getItem('access_token');

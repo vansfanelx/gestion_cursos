@@ -12,57 +12,67 @@
   <form [formGroup]="inscripcionForm" (ngSubmit)="onSubmit()" class="inscripcion-form">
     <div class="form-grid">
       <div class="form-group">
-        <label for="estudiante_id">Estudiante *</label>
-        <select 
-          id="estudiante_id" 
-          formControlName="estudiante_id"
-          class="form-control"
-          [class.invalid]="inscripcionForm.get('estudiante_id')?.invalid && inscripcionForm.get('estudiante_id')?.touched"
-        >
-          <option value="">Seleccione un estudiante</option>
-          @for (estudiante of estudiantes; track estudiante.id) {
-            <option [value]="estudiante.id">{{ estudiante.name }}</option>
-          }
-        </select>
+        <label>Estudiante *</label>
+        <app-search-select
+          [options]="estudiantes"
+          [labelKey]="'name'"
+          [valueKey]="'id'"
+          [placeholder]="'Buscar estudiante...'"
+          [selectedValue]="selectedEstudianteId"           [disabled]="isEditMode"          (selectedChange)="onEstudianteSelected($event)"
+        ></app-search-select>
         @if (inscripcionForm.get('estudiante_id')?.invalid && inscripcionForm.get('estudiante_id')?.touched) {
           <span class="error-text">El estudiante es requerido</span>
         }
       </div>
 
       <div class="form-group">
-        <label for="curso_id">Curso *</label>
-        <select 
-          id="curso_id" 
-          formControlName="curso_id"
-          class="form-control"
-          [class.invalid]="inscripcionForm.get('curso_id')?.invalid && inscripcionForm.get('curso_id')?.touched"
-        >
-          <option value="">Seleccione un curso</option>
-          @for (curso of cursos; track curso.id) {
-            <option [value]="curso.id">{{ curso.nombre }}</option>
-          }
-        </select>
+        <label>Curso *</label>
+        <app-search-select
+          [options]="cursos"
+          [labelKey]="'nombre'"
+          [valueKey]="'id'"
+          [placeholder]="'Buscar curso...'"
+          [selectedValue]="selectedCursoId"           [disabled]="isEditMode"          (selectedChange)="onCursoSelected($event)"
+        ></app-search-select>
         @if (inscripcionForm.get('curso_id')?.invalid && inscripcionForm.get('curso_id')?.touched) {
           <span class="error-text">El curso es requerido</span>
         }
       </div>
 
       <div class="form-group">
-        <label for="estado">Estado *</label>
-        <select 
-          id="estado" 
-          formControlName="estado"
+        <label>Estado</label>
+        <div class="estado-display">
+          <span class="badge" [ngClass]="estadoBadgeClass">{{ estadoLabel }}</span>
+          <small class="estado-hint">{{ estadoHint }}</small>
+        </div>
+      </div>
+
+      @if (isEditMode && isAdmin) {
+        <div class="form-group form-group-full">
+          <label class="checkbox-label">
+            <input type="checkbox" [checked]="marcarAbandonado" (change)="toggleAbandonado($event)" />
+            <span>Marcar como Abandonado</span>
+          </label>
+          <small class="hint">Solo usar si el estudiante abandona el curso</small>
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="nota_parcial">Nota Parcial (40%)</label>
+        <input 
+          type="number" 
+          id="nota_parcial" 
+          formControlName="nota_parcial"
           class="form-control"
-        >
-          <option value="inscrito">Inscrito</option>
-          <option value="en_progreso">En Progreso</option>
-          <option value="completado">Completado</option>
-          <option value="abandonado">Abandonado</option>
-        </select>
+          min="0"
+          max="20"
+          step="0.5"
+          placeholder="0.00"
+        />
       </div>
 
       <div class="form-group">
-        <label for="nota_final">Nota Final</label>
+        <label for="nota_final">Nota Final (60%)</label>
         <input 
           type="number" 
           id="nota_final" 
@@ -73,6 +83,15 @@
           step="0.5"
           placeholder="0.00"
         />
+      </div>
+
+      <div class="form-group">
+        <label>Promedio (40/60)</label>
+        @if (promedioCalculado !== null) {
+          <div class="promedio-box">{{ promedioCalculado }}</div>
+        } @else {
+          <div class="promedio-box pendiente">Pendiente</div>
+        }
       </div>
     </div>
 

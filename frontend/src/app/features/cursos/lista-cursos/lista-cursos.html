@@ -1,6 +1,6 @@
 <div class="cursos-container">
   <header class="page-header">
-    <h1>📚 Gestión de Cursos</h1>
+    <h1>{{ pageTitle }}</h1>
   </header>
 
   <div class="toolbar">
@@ -8,12 +8,12 @@
       <input
         type="text"
         [(ngModel)]="searchText"
-        placeholder="Buscar por nombre, descripción o profesor..."
+        [placeholder]="isProfesor ? 'Buscar en mis cursos...' : 'Buscar por nombre, descripción o profesor...'"
         class="search-input"
       />
       <span class="search-icon">🔍</span>
     </div>
-    @if (canEdit()) {
+    @if (canCreate()) {
       <button class="btn-add" [routerLink]="'nuevo'">
         ➕ Nuevo Curso
       </button>
@@ -86,7 +86,7 @@
           } @empty {
             <tr>
               <td colspan="5" class="empty-state">
-                <p>No se encontraron cursos</p>
+                <p>{{ isProfesor ? 'No tienes cursos asignados' : 'No se encontraron cursos' }}</p>
               </td>
             </tr>
           }

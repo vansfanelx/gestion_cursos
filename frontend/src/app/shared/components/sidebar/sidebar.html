@@ -32,51 +32,53 @@
   <nav class="sidebar-nav">
     <ul class="menu-list">
       @for (item of menuItems; track item.label) {
-        <li class="menu-item">
-          @if (item.subItems) {
-            <!-- Menu with submenu -->
-            <button 
-              class="menu-link"
-              [class.active]="isSubmenuOpen(item)"
-              (click)="toggleSubmenu(item)">
-              <span class="menu-icon">{{ item.icon }}</span>
-              @if (isExpanded$ | async) {
-                <span class="menu-label">{{ item.label }}</span>
-                <span class="submenu-arrow" [class.rotated]="isSubmenuOpen(item)">▼</span>
-              }
-            </button>
-            
-            @if (isSubmenuOpen(item) && (isExpanded$ | async)) {
-              <ul class="submenu">
-                @for (subItem of item.subItems; track subItem.label) {
-                  @if (canAccess(subItem.roles)) {
-                    <li>
-                      <a 
-                        [routerLink]="subItem.route"
-                        routerLinkActive="active"
-                        class="submenu-link"
-                        (click)="navigate(subItem.route)">
-                        {{ subItem.label }}
-                      </a>
-                    </li>
-                  }
+        @if (canAccess(item.roles)) {
+          <li class="menu-item">
+            @if (item.subItems) {
+              <!-- Menu with submenu -->
+              <button 
+                class="menu-link"
+                [class.active]="isSubmenuOpen(item)"
+                (click)="toggleSubmenu(item)">
+                <span class="menu-icon">{{ item.icon }}</span>
+                @if (isExpanded$ | async) {
+                  <span class="menu-label">{{ item.label }}</span>
+                  <span class="submenu-arrow" [class.rotated]="isSubmenuOpen(item)">▼</span>
                 }
-              </ul>
-            }
-          } @else {
-            <!-- Direct link -->
-            <a 
-              [routerLink]="item.route"
-              routerLinkActive="active"
-              class="menu-link"
-              (click)="navigate(item.route!)">
-              <span class="menu-icon">{{ item.icon }}</span>
-              @if (isExpanded$ | async) {
-                <span class="menu-label">{{ item.label }}</span>
+              </button>
+              
+              @if (isSubmenuOpen(item) && (isExpanded$ | async)) {
+                <ul class="submenu">
+                  @for (subItem of item.subItems; track subItem.label) {
+                    @if (canAccess(subItem.roles)) {
+                      <li>
+                        <a 
+                          [routerLink]="subItem.route"
+                          routerLinkActive="active"
+                          class="submenu-link"
+                          (click)="navigate(subItem.route)">
+                          {{ subItem.label }}
+                        </a>
+                      </li>
+                    }
+                  }
+                </ul>
               }
-            </a>
-          }
-        </li>
+            } @else {
+              <!-- Direct link -->
+              <a 
+                [routerLink]="item.route"
+                routerLinkActive="active"
+                class="menu-link"
+                (click)="navigate(item.route!)">
+                <span class="menu-icon">{{ item.icon }}</span>
+                @if (isExpanded$ | async) {
+                  <span class="menu-label">{{ item.label }}</span>
+                }
+              </a>
+            }
+          </li>
+        }
       }
     </ul>
   </nav>

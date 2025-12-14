@@ -13,15 +13,22 @@ class Inscripcion extends Model
         'estudiante_id',
         'curso_id',
         'estado',
+        'nota_parcial',
         'nota_final',
+        'promedio',
         'fecha_inscripcion',
-        'fecha_finalizacion'
+        'fecha_finalizacion',
+        'fecha_solicitud',
+        'motivo_rechazo'
     ];
 
     protected $casts = [
+        'nota_parcial' => 'decimal:2',
         'nota_final' => 'decimal:2',
+        'promedio' => 'decimal:2',
         'fecha_inscripcion' => 'datetime',
         'fecha_finalizacion' => 'datetime',
+        'fecha_solicitud' => 'datetime',
     ];
 
     public function estudiante(): BelongsTo

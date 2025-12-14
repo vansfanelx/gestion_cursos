@@ -65,9 +65,25 @@
             <span class="value">{{ inscripcion.fecha_inscripcion | date: 'dd/MM/yyyy' }}</span>
           </div>
           <div class="info-item">
+            <span class="label">🧮 Nota Parcial (40%):</span>
+            @if (inscripcion.nota_parcial !== null && inscripcion.nota_parcial !== undefined) {
+              <span class="value nota">{{ inscripcion.nota_parcial }}</span>
+            } @else {
+              <span class="value nota-pendiente">Pendiente</span>
+            }
+          </div>
+          <div class="info-item">
             <span class="label">📊 Nota Final:</span>
             @if (inscripcion.nota_final !== null && inscripcion.nota_final !== undefined) {
               <span class="value nota">{{ inscripcion.nota_final }}</span>
+            } @else {
+              <span class="value nota-pendiente">Pendiente</span>
+            }
+          </div>
+          <div class="info-item">
+            <span class="label">🔢 Promedio (40/60):</span>
+            @if (inscripcion.promedio !== null && inscripcion.promedio !== undefined) {
+              <span class="value nota">{{ inscripcion.promedio }}</span>
             } @else {
               <span class="value nota-pendiente">Pendiente</span>
             }

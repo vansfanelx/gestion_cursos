@@ -78,6 +78,6 @@ export class DetalleCurso implements OnInit {
   }
 
   canEdit(): boolean {
-    return this.currentUser?.role === 'admin' || this.currentUser?.role === 'profesor';
+    return this.currentUser?.role === 'admin'; // Solo admin puede editar cursos
   }
 }

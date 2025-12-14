@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { Auth } from '../../../core/services/auth';
 import { Inscripciones, Inscripcion } from '../../../core/services/inscripciones';
 import { Cursos } from '../../../core/services/cursos';
+import { Usuarios } from '../../../core/services/usuarios';
 import { FilterPipe } from '../../../shared/pipes/filter-pipe';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -34,6 +36,7 @@ export class DashboardHome implements OnInit {
     private authService: Auth,
     private inscripcionesService: Inscripciones,
     private cursosService: Cursos,
+    private usuariosService: Usuarios,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -86,38 +89,47 @@ export class DashboardHome implements OnInit {
 
   loadProfesorData() {
     console.log('Cargando datos de profesor...');
-    this.cursosService.getAll().subscribe({
-      next: (cursos: any[]) => {
-        console.log('Datos de profesor cargados:', cursos);
-        // Filtrar solo los cursos del profesor
-        this.misCursos = cursos.filter(c => c.profesor_id === this.currentUser.id);
-        // Calcular total de estudiantes (esto vendría mejor del backend)
-        this.totalEstudiantes = 0; // Por ahora
-        this.loading = false;
-        console.log('Loading establecido a false');
-        this.cdr.markForCheck();
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error cargando cursos:', err);
-        this.loading = false;
-        console.log('Loading establecido a false (error)');
-        this.cdr.markForCheck();
-        this.cdr.detectChanges();
-      }
+    // Cargar cursos y inscripciones en paralelo
+    import('rxjs').then(({ forkJoin }) => {
+      forkJoin({
+        cursos: this.cursosService.getAll(),
+        inscripciones: this.inscripcionesService.getAll()
+      }).subscribe({
+        next: (data: any) => {
+          console.log('Datos de profesor cargados:', data);
+          this.misCursos = data.cursos;
+          // Contar estudiantes únicos de todas las inscripciones
+          const estudiantesUnicos = new Set(data.inscripciones.map((i: any) => i.estudiante_id));
+          this.totalEstudiantes = estudiantesUnicos.size;
+          this.loading = false;
+          console.log('Loading establecido a false');
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando datos:', err);
+          this.loading = false;
+          console.log('Loading establecido a false (error)');
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
+        }
+      });
     });
   }
 
   loadAdminData() {
     console.log('Cargando datos de admin...');
-    // El admin ve estadísticas generales
-    this.cursosService.getAll().subscribe({
-      next: (cursos: any[]) => {
-        console.log('Datos de admin cargados:', cursos);
-        this.totalCursos = cursos.length;
-        // Estos datos deberían venir de endpoints específicos
-        this.totalProfesores = 0;
-        this.totalAlumnos = 0;
+    // Cargar cursos y usuarios en paralelo
+    forkJoin({
+      cursos: this.cursosService.getAll(),
+      usuarios: this.usuariosService.getAll()
+    }).subscribe({
+      next: (data: any) => {
+        console.log('Datos de admin cargados:', data);
+        this.totalCursos = data.cursos.length;
+        // Contar profesores y estudiantes
+        this.totalProfesores = data.usuarios.filter((u: any) => u.role === 'profesor').length;
+        this.totalAlumnos = data.usuarios.filter((u: any) => u.role === 'estudiante').length;
         this.loading = false;
         console.log('Loading establecido a false, totalCursos:', this.totalCursos);
         this.cdr.markForCheck();
@@ -139,20 +151,24 @@ export class DashboardHome implements OnInit {
 
   getEstadoBadgeClass(estado: string): string {
     const classes: any = {
+      'pendiente': 'badge-warning',
       'inscrito': 'badge-info',
-      'en_progreso': 'badge-warning',
+      'en_progreso': 'badge-primary',
       'completado': 'badge-success',
-      'abandonado': 'badge-danger'
+      'abandonado': 'badge-secondary',
+      'rechazado': 'badge-danger'
     };
     return classes[estado] || 'badge-secondary';
   }
 
   getEstadoTexto(estado: string): string {
     const textos: any = {
+      'pendiente': 'Pendiente',
       'inscrito': 'Inscrito',
       'en_progreso': 'En Progreso',
       'completado': 'Completado',
-      'abandonado': 'Abandonado'
+      'abandonado': 'Abandonado',
+      'rechazado': 'Rechazado'
     };
     return textos[estado] || estado;
   }

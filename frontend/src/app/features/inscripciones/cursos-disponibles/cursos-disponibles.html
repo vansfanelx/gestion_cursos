@@ -1,0 +1,218 @@
+<div class="cursos-disponibles-container">
+  <div class="page-header">
+    <h2>📚 Cursos y Mis Inscripciones</h2>
+    <p class="subtitle">Explora los cursos disponibles y gestiona tus inscripciones</p>
+  </div>
+
+  <!-- Mensajes -->
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <i class="fas fa-check-circle"></i> {{ successMessage }}
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger">
+      <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>
+  }
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando información...</p>
+    </div>
+  } @else {
+    <!-- Solicitudes Pendientes -->
+    @if (solicitudesPendientes.length > 0) {
+      <section class="section">
+        <h3 class="section-title">
+          <span class="icon">⏳</span> Solicitudes Pendientes
+        </h3>
+        <div class="cards-grid">
+          @for (solicitud of solicitudesPendientes; track solicitud.id) {
+            <div class="card card-pending">
+              <div class="card-header">
+                <h4>{{ solicitud.curso?.nombre }}</h4>
+                <span class="badge badge-warning">Pendiente</span>
+              </div>
+              <div class="card-body">
+                <p class="info-item">
+                  <i class="fas fa-chalkboard-teacher"></i>
+                  <strong>Profesor:</strong> {{ solicitud.curso?.profesor?.name || 'Sin asignar' }}
+                </p>
+                <p class="info-item">
+                  <i class="fas fa-clock"></i>
+                  <strong>Duración:</strong> {{ solicitud.curso?.duracion }} horas
+                </p>
+                <p class="info-item">
+                  <i class="fas fa-calendar"></i>
+                  <strong>Solicitado:</strong> {{ solicitud.fecha_solicitud | date:'dd/MM/yyyy HH:mm' }}
+                </p>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm btn-outline-danger" (click)="cancelarSolicitud(solicitud)">
+                  <i class="fas fa-times"></i> Cancelar Solicitud
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Mis Inscripciones Activas -->
+    @if (inscripcionesActivas.length > 0) {
+      <section class="section">
+        <h3 class="section-title">
+          <span class="icon">📖</span> Mis Cursos Activos
+        </h3>
+        <div class="cards-grid">
+          @for (inscripcion of inscripcionesActivas; track inscripcion.id) {
+            <div class="card card-active">
+              <div class="card-header">
+                <h4>{{ inscripcion.curso?.nombre }}</h4>
+                <span class="badge" [class]="getEstadoClass(inscripcion.estado)">
+                  {{ getEstadoTexto(inscripcion.estado) }}
+                </span>
+              </div>
+              <div class="card-body">
+                <p class="info-item">
+                  <i class="fas fa-chalkboard-teacher"></i>
+                  <strong>Profesor:</strong> {{ inscripcion.curso?.profesor?.name || 'Sin asignar' }}
+                </p>
+                <p class="info-item">
+                  <i class="fas fa-clock"></i>
+                  <strong>Duración:</strong> {{ inscripcion.curso?.duracion }} horas
+                </p>
+                @if (inscripcion.nota_parcial !== null && inscripcion.nota_parcial !== undefined) {
+                  <p class="info-item">
+                    <i class="fas fa-file-alt"></i>
+                    <strong>Nota Parcial:</strong> {{ inscripcion.nota_parcial }}
+                  </p>
+                }
+                @if (inscripcion.nota_final !== null && inscripcion.nota_final !== undefined) {
+                  <p class="info-item">
+                    <i class="fas fa-file-signature"></i>
+                    <strong>Nota Final:</strong> {{ inscripcion.nota_final }}
+                  </p>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Historial (Finalizadas) -->
+    @if (inscripcionesFinalizadas.length > 0) {
+      <section class="section">
+        <h3 class="section-title">
+          <span class="icon">📜</span> Historial
+        </h3>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Curso</th>
+                <th>Profesor</th>
+                <th>Estado</th>
+                <th>Promedio</th>
+                <th>Observación</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (inscripcion of inscripcionesFinalizadas; track inscripcion.id) {
+                <tr>
+                  <td>{{ inscripcion.curso?.nombre }}</td>
+                  <td>{{ inscripcion.curso?.profesor?.name || 'Sin asignar' }}</td>
+                  <td>
+                    <span class="badge" [class]="getEstadoClass(inscripcion.estado)">
+                      {{ getEstadoTexto(inscripcion.estado) }}
+                    </span>
+                  </td>
+                  <td>
+                    @if (inscripcion.promedio !== null && inscripcion.promedio !== undefined) {
+                      <span [class]="inscripcion.promedio >= 11 ? 'text-success' : 'text-danger'">
+                        {{ inscripcion.promedio | number:'1.2-2' }}
+                      </span>
+                    } @else {
+                      <span class="text-muted">-</span>
+                    }
+                  </td>
+                  <td>
+                    @if (inscripcion.estado === 'rechazado' && inscripcion.motivo_rechazo) {
+                      <span class="text-danger">{{ inscripcion.motivo_rechazo }}</span>
+                    } @else if (inscripcion.estado === 'completado') {
+                      @if (inscripcion.promedio !== null && inscripcion.promedio !== undefined) {
+                        <span [class]="inscripcion.promedio >= 11 ? 'text-success' : 'text-danger'">
+                          {{ inscripcion.promedio >= 11 ? 'Aprobado' : 'Desaprobado' }}
+                        </span>
+                      }
+                    } @else {
+                      -
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <!-- Cursos Disponibles -->
+    <section class="section">
+      <h3 class="section-title">
+        <span class="icon">🎓</span> Cursos Disponibles para Inscripción
+      </h3>
+      
+      @if (cursosDisponibles.length === 0) {
+        <div class="empty-state">
+          <i class="fas fa-graduation-cap"></i>
+          <p>No hay cursos disponibles para inscripción en este momento.</p>
+          <small>Ya tienes solicitudes o inscripciones en todos los cursos.</small>
+        </div>
+      } @else {
+        <div class="cards-grid">
+          @for (curso of cursosDisponibles; track curso.id) {
+            <div class="card card-available">
+              <div class="card-header">
+                <h4>{{ curso.nombre }}</h4>
+              </div>
+              <div class="card-body">
+                <p class="description">{{ curso.descripcion }}</p>
+                <div class="info-row">
+                  <p class="info-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    {{ curso.profesor.name || 'Sin asignar' }}
+                  </p>
+                  <p class="info-item">
+                    <i class="fas fa-clock"></i>
+                    {{ curso.duracion }} horas
+                  </p>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-primary" (click)="solicitarInscripcion(curso)">
+                  <i class="fas fa-paper-plane"></i> Solicitar Inscripción
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  }
+</div>
+
+<!-- Modal de Confirmación -->
+<app-confirm-modal
+  [show]="showModal"
+  [title]="modalTitle"
+  [message]="modalMessage"
+  [confirmText]="modalConfirmText"
+  [danger]="modalDanger"
+  (confirmed)="onModalConfirm()"
+  (cancelled)="onModalCancel()">
+</app-confirm-modal>

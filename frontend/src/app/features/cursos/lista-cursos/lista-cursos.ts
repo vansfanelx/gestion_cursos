@@ -48,6 +48,18 @@ export class ListaCursos implements OnInit {
     private router: Router
   ) {}
 
+  get isAdmin(): boolean {
+    return this.currentUser?.role === 'admin';
+  }
+
+  get isProfesor(): boolean {
+    return this.currentUser?.role === 'profesor';
+  }
+
+  get pageTitle(): string {
+    return this.isProfesor ? '📚 Mis Cursos' : '📚 Gestión de Cursos';
+  }
+
   ngOnInit() {
     const token = localStorage.getItem('access_token');
     console.log('Token en localStorage:', token ? 'Sí existe' : 'No existe');
@@ -122,11 +134,15 @@ export class ListaCursos implements OnInit {
     this.router.navigate(['/cursos', id]);
   }
 
+  canCreate(): boolean {
+    return this.isAdmin;
+  }
+
   canEdit(): boolean {
-    return this.currentUser?.role === 'admin' || this.currentUser?.role === 'profesor';
+    return this.isAdmin; // Solo admin puede editar cursos
   }
 
   canDelete(): boolean {
-    return this.currentUser?.role === 'admin';
+    return this.isAdmin;
   }
 }

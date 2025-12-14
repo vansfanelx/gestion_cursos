@@ -1,0 +1,31 @@
+<div class="search-select" [class.disabled]="disabled" (keydown)="onKeydown($event)">
+  <div class="control" (click)="toggleOpen()">
+    <input
+      type="text"
+      class="input"
+      [placeholder]="placeholder"
+      [value]="query"
+      (input)="onInput($event)"
+      (focus)="open()"
+    />
+    <span class="chevron">▾</span>
+  </div>
+  @if (isOpen) {
+    <ul class="dropdown">
+      @if (filteredOptions.length === 0) {
+        <li class="empty">Sin resultados</li>
+      } @else {
+        @for (opt of filteredOptions; track opt[valueKey]) {
+          <li
+            class="option"
+            [class.selected]="isSelected(opt)"
+            [class.highlighted]="filteredOptions[highlightedIndex] === opt"
+            (mousedown)="select(opt)"
+          >
+            <span [innerHTML]="highlightText(opt[labelKey]).__html"></span>
+          </li>
+        }
+      }
+    </ul>
+  }
+</div>

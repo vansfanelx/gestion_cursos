@@ -107,11 +107,11 @@
               <p class="stat-value">{{ totalEstudiantes }}</p>
             </div>
           </div>
-          <div class="stat-card clickable" (click)="navigateTo('/cursos/nuevo')">
-            <div class="stat-icon">➕</div>
+          <div class="stat-card clickable" (click)="navigateTo('/inscripciones')">
+            <div class="stat-icon">📝</div>
             <div class="stat-content">
-              <h3>Nuevo Curso</h3>
-              <p class="stat-value">Crear</p>
+              <h3>Gestionar Notas</h3>
+              <p class="stat-value">Ver</p>
             </div>
             <div class="stat-arrow">→</div>
           </div>
@@ -137,8 +137,8 @@
                     <td class="text-truncate">{{ curso.descripcion }}</td>
                     <td>{{ curso.duracion }}h</td>
                     <td>
-                      <button class="btn-sm btn-primary" (click)="navigateTo('/cursos/editar/' + curso.id)">
-                        ✏️ Editar
+                      <button class="btn-sm btn-primary" (click)="navigateTo('/cursos/' + curso.id)">
+                        👁️ Ver
                       </button>
                     </td>
                   </tr>

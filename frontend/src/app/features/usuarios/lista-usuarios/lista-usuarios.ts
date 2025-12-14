@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Usuarios } from '../../../core/services/usuarios';
+import { Auth } from '../../../core/services/auth';
 import { ConfirmModal } from '../../../shared/components/confirm-modal/confirm-modal';
 
 interface Usuario {
@@ -32,9 +33,22 @@ export class ListaUsuarios implements OnInit {
 
   constructor(
     private usuariosService: Usuarios,
+    private authService: Auth,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
+
+  get isAdmin(): boolean {
+    return this.authService.getUserRole() === 'admin';
+  }
+
+  get isProfesor(): boolean {
+    return this.authService.getUserRole() === 'profesor';
+  }
+
+  get pageTitle(): string {
+    return this.isProfesor ? '🎓 Mis Estudiantes' : '👥 Gestión de Usuarios';
+  }
 
   ngOnInit() {
     const token = localStorage.getItem('access_token');

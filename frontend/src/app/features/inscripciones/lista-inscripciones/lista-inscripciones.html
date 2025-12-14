@@ -1,6 +1,6 @@
 <div class="inscripciones-container">
   <header class="page-header">
-    <h1>✍️ Gestión de Inscripciones</h1>
+    <h1>{{ pageTitle }}</h1>
   </header>
 
   <div class="toolbar">
@@ -21,9 +21,11 @@
         <option value="completado">Completado</option>
         <option value="abandonado">Abandonado</option>
       </select>
-      <button class="btn-add" [routerLink]="'/inscripciones/nuevo'">
-        ➕ Nueva Inscripción
-      </button>
+      @if (isAdmin) {
+        <button class="btn-add" [routerLink]="'/inscripciones/nuevo'">
+          ➕ Nueva Inscripción
+        </button>
+      }
     </div>
   </div>
 
@@ -46,7 +48,9 @@
             <th>Curso</th>
             <th>Profesor</th>
             <th>Estado</th>
-            <th>Nota Final</th>
+            <th>Parcial (40%)</th>
+            <th>Final (60%)</th>
+            <th>Promedio</th>
             <th>Fecha</th>
             <th class="actions-header">Acciones</th>
           </tr>
@@ -54,7 +58,7 @@
         <tbody>
           @if (filteredInscripciones.length === 0) {
             <tr>
-              <td colspan="7" class="empty-state">
+              <td colspan="9" class="empty-state">
                 No se encontraron inscripciones
               </td>
             </tr>
@@ -85,8 +89,22 @@
                   </span>
                 </td>
                 <td>
+                  @if (inscripcion.nota_parcial !== null && inscripcion.nota_parcial !== undefined) {
+                    <span class="nota">{{ inscripcion.nota_parcial }}</span>
+                  } @else {
+                    <span class="nota-pendiente">Pendiente</span>
+                  }
+                </td>
+                <td>
                   @if (inscripcion.nota_final !== null && inscripcion.nota_final !== undefined) {
                     <span class="nota">{{ inscripcion.nota_final }}</span>
+                  } @else {
+                    <span class="nota-pendiente">Pendiente</span>
+                  }
+                </td>
+                <td>
+                  @if (inscripcion.promedio !== null && inscripcion.promedio !== undefined) {
+                    <span class="nota">{{ inscripcion.promedio }}</span>
                   } @else {
                     <span class="nota-pendiente">Pendiente</span>
                   }
@@ -97,12 +115,14 @@
                     <button class="btn-icon btn-view" (click)="verDetalle(inscripcion.id)" title="Ver detalles">
                       👁️
                     </button>
-                    <button class="btn-icon btn-edit" (click)="editInscripcion(inscripcion.id)" title="Editar">
+                    <button class="btn-icon btn-edit" (click)="editInscripcion(inscripcion.id)" title="Editar notas">
                       ✏️
                     </button>
-                    <button class="btn-icon btn-delete" (click)="deleteInscripcion(inscripcion.id)" title="Eliminar">
-                      🗑️
-                    </button>
+                    @if (isAdmin) {
+                      <button class="btn-icon btn-delete" (click)="deleteInscripcion(inscripcion.id)" title="Eliminar">
+                        🗑️
+                      </button>
+                    }
                   </div>
                 </td>
               </tr>

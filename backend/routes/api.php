@@ -44,4 +44,9 @@ Route::middleware('auth:api')->group(function () {
     Route::put('inscripciones/{id}', [InscripcionController::class, 'update']);
     Route::delete('inscripciones/{id}', [InscripcionController::class, 'destroy']);
     Route::get('cursos-disponibles', [InscripcionController::class, 'cursosDisponibles']);
+    
+    // Rutas de gestión de solicitudes (admin)
+    Route::get('solicitudes-pendientes', [InscripcionController::class, 'solicitudesPendientes']);
+    Route::post('inscripciones/{id}/aprobar', [InscripcionController::class, 'aprobar']);
+    Route::post('inscripciones/{id}/rechazar', [InscripcionController::class, 'rechazar']);
 });

@@ -1,348 +1,484 @@
-# Sistema de Gestión de Cursos
+# 🎓 Sistema de Gestión de Cursos
 
-**Autor:** Jonathan Jiménez Rojas  
-**GitHub:** [https://github.com/vansfanelx](https://github.com/vansfanelx)
+**Autor:** Jonathan José Jiménez Rojas  
+**GitHub:** [https://github.com/vansfanelx](https://github.com/vansfanelx)  
+**Curso:** Desarrollo de Interfaces  
+**Fecha:** Diciembre 2025
 
-## Descripción del Proyecto
+---
 
-Sistema web SPA (Single Page Application) desarrollado con **Laravel 12** como backend API REST con autenticación JWT y **Angular** como frontend, que permite gestionar cursos y usuarios de una institución educativa.
+## 📋 Descripción del Proyecto
 
-## Tecnologías Utilizadas
+Sistema web SPA (Single Page Application) profesional tipo **EVA (Entorno Virtual de Aprendizaje)** desarrollado con **Laravel 12** como backend API REST con autenticación JWT y **Angular 21** como frontend. Permite gestionar cursos, usuarios e inscripciones de una institución educativa con sistema de calificaciones profesional.
+
+### Características Principales
+- 🔐 **Autenticación JWT** con tokens seguros
+- 👥 **Sistema de roles** (Admin, Profesor, Estudiante)
+- 📚 **Gestión de cursos** con asignación de profesores
+- 📝 **Sistema de inscripciones** con flujo de aprobación
+- 📊 **Sistema de calificaciones** (Parcial 40% + Final 60% = Promedio)
+- 🛡️ **Guards de navegación** para rutas protegidas
+- 🔄 **Interceptores HTTP** para manejo automático de tokens
+
+---
+
+## 🛠️ Tecnologías Utilizadas
 
 ### Backend
-- **Laravel 12** - Framework PHP
-- **JWT (tymon/jwt-auth)** - Autenticación mediante tokens
-- **MySQL** - Base de datos
-- **PHP 8.3+**
+| Tecnología | Versión | Descripción |
+|------------|---------|-------------|
+| Laravel | 12.x | Framework PHP para API REST |
+| PHP | 8.3+ | Lenguaje de programación |
+| MySQL | 8.0+ | Base de datos relacional |
+| tymon/jwt-auth | 2.x | Autenticación JWT |
 
 ### Frontend
-- **Angular** (última versión) - Framework de desarrollo
-- **TypeScript** - Lenguaje de programación
-- **RxJS** - Programación reactiva
-- **HttpClient** - Consumo de API REST
+| Tecnología | Versión | Descripción |
+|------------|---------|-------------|
+| Angular | 21.x | Framework SPA |
+| TypeScript | 5.x | Lenguaje tipado |
+| RxJS | 7.x | Programación reactiva |
+| Angular Router | 21.x | Enrutamiento SPA |
 
-## Características Implementadas
+---
 
-### Backend (Laravel)
-✅ Autenticación JWT con tokens seguros  
-✅ API REST para gestión de usuarios, cursos e inscripciones  
-✅ Middleware de autenticación y autorización  
-✅ CORS configurado para Angular  
-✅ Migraciones de base de datos  
-✅ Modelos con relaciones Eloquent  
-✅ Validación de datos  
-✅ Control de roles (Admin, Profesor, Estudiante)
+## 🏗️ Arquitectura del Sistema
 
-### Frontend (Angular)
-✅ Arquitectura modular con separación de responsabilidades  
-✅ Lazy Loading por módulos funcionales  
-✅ Guards de autenticación (AuthGuard) y roles (RoleGuard)  
-✅ HttpInterceptor para inyectar JWT automáticamente  
-✅ Servicios REST con HttpClient  
-✅ Programación orientada a objetos con componentes y modelos  
-✅ Pipes personalizados  
-✅ Directivas personalizadas  
-✅ Rutas protegidas según tipo de usuario  
-✅ Gestión de estado con Observables  
-✅ Interfaz clara y fluida (SPA)
-
-## Estructura del Proyecto
+### Estructura del Proyecto
 
 ```
 gestion_cursos/
-├── backend/                 # Laravel 12 API
+├── backend/                          # Laravel 12 API REST
 │   ├── app/
 │   │   ├── Http/
 │   │   │   ├── Controllers/
-│   │   │   │   ├── AuthController.php
-│   │   │   │   ├── CursoController.php
-│   │   │   │   └── UserController.php
+│   │   │   │   ├── AuthController.php      # Autenticación JWT
+│   │   │   │   ├── CursoController.php     # CRUD de cursos
+│   │   │   │   ├── InscripcionController.php # Gestión de inscripciones
+│   │   │   │   └── UserController.php      # CRUD de usuarios
+│   │   │   └── Middleware/
 │   │   └── Models/
-│   │       ├── User.php
-│   │       └── Curso.php
+│   │       ├── User.php                    # Modelo de usuario
+│   │       ├── Curso.php                   # Modelo de curso
+│   │       └── Inscripcion.php             # Modelo de inscripción
 │   ├── config/
-│   │   ├── auth.php
-│   │   ├── jwt.php
-│   │   └── cors.php
+│   │   ├── auth.php                        # Configuración de guards
+│   │   ├── jwt.php                         # Configuración JWT
+│   │   └── cors.php                        # Configuración CORS
 │   ├── database/
-│   │   └── migrations/
+│   │   └── migrations/                     # Migraciones de BD
 │   └── routes/
-│       └── api.php
+│       └── api.php                         # Rutas de la API
 │
-└── frontend/                # Angular SPA
+└── frontend/                         # Angular 21 SPA
     ├── src/
     │   ├── app/
-    │   │   ├── auth/                    # Módulo de autenticación
+    │   │   ├── auth/                       # Módulo de autenticación
     │   │   │   └── login/
-    │   │   ├── core/                    # Módulo Core
+    │   │   ├── core/                       # Módulo Core (Singleton)
     │   │   │   ├── guards/
-    │   │   │   │   ├── auth-guard.ts
-    │   │   │   │   └── role-guard.ts
+    │   │   │   │   ├── auth-guard.ts       # Guard de autenticación
+    │   │   │   │   └── role-guard.ts       # Guard de roles
     │   │   │   ├── interceptors/
-    │   │   │   │   └── jwt-interceptor.ts
-    │   │   │   ├── models/
-    │   │   │   │   ├── user.model.ts
-    │   │   │   │   └── curso.model.ts
+    │   │   │   │   └── jwt-interceptor.ts  # Interceptor JWT
     │   │   │   └── services/
-    │   │   │       ├── auth.ts
-    │   │   │       ├── cursos.ts
-    │   │   │       └── usuarios.ts
-    │   │   ├── features/                # Módulos funcionales
+    │   │   │       ├── auth.ts             # Servicio de autenticación
+    │   │   │       ├── cursos.ts           # Servicio de cursos
+    │   │   │       ├── inscripciones.ts    # Servicio de inscripciones
+    │   │   │       └── usuarios.ts         # Servicio de usuarios
+    │   │   ├── features/                   # Módulos funcionales (Lazy Loading)
     │   │   │   ├── dashboard/
     │   │   │   ├── cursos/
+    │   │   │   ├── inscripciones/
     │   │   │   └── usuarios/
-    │   │   └── shared/                  # Módulo compartido
+    │   │   └── shared/                     # Componentes compartidos
+    │   │       ├── components/
+    │   │       │   ├── sidebar/
+    │   │       │   ├── header/
+    │   │       │   ├── confirm-modal/
+    │   │       │   └── search-select/
+    │   │       └── pipes/
     │   └── environments/
     └── angular.json
 ```
 
-## Instalación y Configuración
+---
 
-### Prerrequisitos
-- PHP 8.3+
-- Composer
-- Node.js 18+
-- npm
-- MySQL
-- Laragon (recomendado para Windows)
+## 🔐 Sistema de Autenticación JWT
 
-### Instalación del Backend (Laravel)
+### Flujo de Autenticación
 
-1. Navegar al directorio del backend:
-```bash
-cd backend
+```
+┌─────────────┐     POST /api/auth/login      ┌─────────────┐
+│   Angular   │ ──────────────────────────────▶│   Laravel   │
+│  Frontend   │                                │   Backend   │
+└─────────────┘                                └─────────────┘
+       │                                              │
+       │         { email, password }                  │
+       │ ◀────────────────────────────────────────────│
+       │                                              │
+       │         JWT Token + User Data                │
+       │ ◀────────────────────────────────────────────│
+       │                                              │
+       │  localStorage.setItem('access_token', jwt)   │
+       ▼                                              ▼
+┌─────────────┐     Authorization: Bearer JWT  ┌─────────────┐
+│  Peticiones │ ──────────────────────────────▶│  API REST   │
+│ Protegidas  │                                │  Protegida  │
+└─────────────┘                                └─────────────┘
 ```
 
-2. Instalar dependencias de Composer:
-```bash
-composer install
+### Configuración JWT en Laravel
+
+**config/auth.php:**
+```php
+'defaults' => [
+    'guard' => 'api',
+    'passwords' => 'users',
+],
+
+'guards' => [
+    'api' => [
+        'driver' => 'jwt',
+        'provider' => 'users',
+    ],
+],
 ```
 
-3. Copiar el archivo de configuración:
-```bash
-copy .env.example .env
-```
+### Interceptor JWT en Angular
 
-4. Configurar la base de datos y URLs en el archivo `.env`:
-```env
-# URLs del proyecto
-APP_URL=http://localhost:8000
-FRONTEND_URL=http://localhost:4200
+El interceptor `jwt-interceptor.ts` inyecta automáticamente el token en cada petición:
 
-# Base de datos
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=gestion_cursos
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-5. Generar la clave de la aplicación:
-```bash
-php artisan key:generate
-```
-
-6. Generar la clave secreta JWT:
-```bash
-php artisan jwt:secret
-```
-
-7. Ejecutar las migraciones:
-```bash
-php artisan migrate
-```
-
-8. (Opcional) Poblar la base de datos con datos de prueba:
-```bash
-php artisan db:seed
-```
-Esto creará usuarios y cursos de ejemplo:
-- Admin: admin@test.com / 123456
-- Profesor: profesor@test.com / 123456
-- Estudiante: estudiante@test.com / 123456
-
-9. Iniciar el servidor de desarrollo:
-```bash
-php artisan serve
-```
-
-El backend estará disponible en: `http://localhost:8000`
-
-### Instalación del Frontend (Angular)
-
-1. Navegar al directorio del frontend:
-```bash
-cd frontend
-```
-
-2. Instalar dependencias de npm:
-```bash
-npm install
-```
-
-3. Verificar la configuración de la API en `src/environments/environment.ts`:
 ```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8000/api'
+export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router);
+  const token = localStorage.getItem('access_token');
+  
+  // Inyectar token en el header Authorization
+  if (token) {
+    req = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+  
+  return next(req).pipe(
+    catchError((error: HttpErrorResponse) => {
+      // Manejo centralizado de errores
+      if (error.status === 401) {
+        localStorage.removeItem('access_token');
+        router.navigate(['/auth/login']);
+      }
+      return throwError(() => ({ ...error, friendlyMessage: errorMessage }));
+    })
+  );
 };
 ```
 
-4. Iniciar el servidor de desarrollo:
-```bash
-ng serve
+---
+
+## 🛡️ Guards de Navegación
+
+### AuthGuard (Protección de Rutas Autenticadas)
+
+Verifica si el usuario tiene un token JWT válido:
+
+```typescript
+// core/guards/auth-guard.ts
+export const authGuard: CanActivateFn = (route, state) => {
+  const authService = inject(Auth);
+  const router = inject(Router);
+  
+  if (authService.isAuthenticated()) {
+    return true;  // ✅ Permite acceso
+  }
+  
+  // ❌ Redirige al login
+  router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
+  return false;
+};
 ```
 
-El frontend estará disponible en: `http://localhost:4200`
+### RoleGuard (Control de Acceso por Rol)
 
-## Configuración CORS
+Verifica si el usuario tiene el rol requerido:
 
-El proyecto está configurado para que el backend (Laravel) permita peticiones desde el frontend (Angular) mediante CORS.
-
-**Variables de entorno en `.env` del backend:**
-```env
-APP_URL=http://localhost:8000
-FRONTEND_URL=http://localhost:4200
+```typescript
+// core/guards/role-guard.ts
+export const roleGuard: CanActivateFn = (route, state) => {
+  const authService = inject(Auth);
+  const router = inject(Router);
+  
+  // Obtener roles permitidos de la configuración de ruta
+  const allowedRoles = route.data['roles'] as string[];
+  
+  if (authService.isAuthenticated() && authService.hasRole(allowedRoles)) {
+    return true;  // ✅ Permite acceso
+  }
+  
+  // ❌ Redirige al dashboard
+  router.navigate(['/dashboard']);
+  return false;
+};
 ```
 
-**Configuración en `config/cors.php`:**
-- `allowed_origins`: Lee la variable `FRONTEND_URL` del `.env`
-- `supports_credentials`: true (permite cookies y autenticación)
-- `allowed_methods`: ['*'] (todos los métodos HTTP)
-- `allowed_headers`: ['*'] (todos los headers)
+---
 
-**Para producción:**
-1. Actualiza `FRONTEND_URL` con tu dominio real
-2. Actualiza `APP_URL` con tu dominio de backend
-3. Considera usar dominios específicos en lugar de `['*']`
+## 🗺️ Configuración de Rutas
 
-## API Endpoints
+### Rutas Principales (app.routes.ts)
 
-### Autenticación
-- `POST /api/auth/register` - Registrar usuario
-- `POST /api/auth/login` - Iniciar sesión
-- `POST /api/auth/logout` - Cerrar sesión
-- `POST /api/auth/refresh` - Refrescar token
-- `GET /api/auth/me` - Obtener usuario autenticado
+```typescript
+export const routes: Routes = [
+  // Ruta pública - Autenticación
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth-routing-module')
+      .then(m => m.AuthRoutingModule)
+  },
+  
+  // Rutas protegidas - Requieren autenticación
+  {
+    path: '',
+    component: MainLayout,
+    canActivate: [authGuard],  // 🛡️ Guard de autenticación
+    children: [
+      // Dashboard - Acceso para todos los usuarios autenticados
+      {
+        path: 'dashboard',
+        loadChildren: () => import('./features/dashboard/dashboard-routing-module')
+          .then(m => m.DashboardRoutingModule)
+      },
+      
+      // Cursos - Acceso para todos los usuarios autenticados
+      {
+        path: 'cursos',
+        loadChildren: () => import('./features/cursos/cursos-routing-module')
+          .then(m => m.CursosRoutingModule)
+      },
+      
+      // Usuarios - Solo Admin y Profesor
+      {
+        path: 'usuarios',
+        loadChildren: () => import('./features/usuarios/usuarios-routing-module')
+          .then(m => m.UsuariosRoutingModule),
+        canActivate: [roleGuard],  // 🛡️ Guard de roles
+        data: { roles: ['profesor', 'admin'] }
+      },
+      
+      // Inscripciones - Solo Admin y Profesor
+      {
+        path: 'inscripciones',
+        loadChildren: () => import('./features/inscripciones/inscripciones-routing-module')
+          .then(m => m.InscripcionesRoutingModule),
+        canActivate: [roleGuard],
+        data: { roles: ['profesor', 'admin'] }
+      },
+      
+      // Cursos disponibles - Solo Estudiantes
+      {
+        path: 'cursos-disponibles',
+        loadComponent: () => import('./features/inscripciones/cursos-disponibles/cursos-disponibles')
+          .then(m => m.CursosDisponibles),
+        canActivate: [roleGuard],
+        data: { roles: ['estudiante'] }
+      }
+    ]
+  }
+];
+```
 
-### Usuarios (Requiere autenticación)
-- `GET /api/users` - Listar usuarios
-- `GET /api/users/{id}` - Ver detalles de usuario
-- `PUT /api/users/{id}` - Actualizar usuario
-- `DELETE /api/users/{id}` - Eliminar usuario
+### Matriz de Acceso por Rol
 
-### Cursos (Requiere autenticación)
-- `GET /api/cursos` - Listar cursos
-- `POST /api/cursos` - Crear curso
-- `GET /api/cursos/{id}` - Ver detalles de curso
-- `PUT /api/cursos/{id}` - Actualizar curso
-- `DELETE /api/cursos/{id}` - Eliminar curso
-- `POST /api/cursos/{id}/inscribir` - Inscribir estudiante
+| Ruta | Admin | Profesor | Estudiante |
+|------|:-----:|:--------:|:----------:|
+| `/dashboard` | ✅ | ✅ | ✅ |
+| `/cursos` | ✅ | ✅ (solo sus cursos) | ❌ |
+| `/cursos/nuevo` | ✅ | ❌ | ❌ |
+| `/usuarios` | ✅ | ✅ (solo estudiantes) | ❌ |
+| `/inscripciones` | ✅ | ✅ (solo sus cursos) | ❌ |
+| `/inscripciones/solicitudes` | ✅ | ❌ | ❌ |
+| `/cursos-disponibles` | ❌ | ❌ | ✅ |
 
-## Roles y Permisos
+---
 
-### Admin
-- Acceso completo al sistema
-- Gestión de usuarios
-- Gestión de cursos
-- Asignación de roles
+## 🌐 Servicios REST Integrados
 
-### Profesor
-- Gestión de sus cursos
-- Ver estudiantes inscritos
-- Actualizar información de cursos
+### Endpoints de la API
 
-### Estudiante
-- Ver cursos disponibles
-- Inscribirse a cursos
-- Ver sus cursos inscritos
+#### Autenticación (`/api/auth`)
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|:----:|
+| POST | `/auth/register` | Registrar usuario | ❌ |
+| POST | `/auth/login` | Iniciar sesión | ❌ |
+| POST | `/auth/logout` | Cerrar sesión | ✅ |
+| POST | `/auth/refresh` | Refrescar token | ✅ |
+| GET | `/auth/me` | Obtener usuario actual | ✅ |
 
-## Conceptos Aplicados
+#### Usuarios (`/api/users`)
+| Método | Endpoint | Descripción | Roles |
+|--------|----------|-------------|-------|
+| GET | `/users` | Listar usuarios | Admin, Profesor |
+| POST | `/users` | Crear usuario | Admin |
+| GET | `/users/{id}` | Ver usuario | Admin, Profesor |
+| PUT | `/users/{id}` | Actualizar usuario | Admin |
+| DELETE | `/users/{id}` | Eliminar usuario | Admin |
 
-### Programación Orientada a Objetos
-- **Modelos**: User, Curso con propiedades y métodos
-- **Controladores**: AuthController, CursoController, UserController
-- **Servicios**: Auth, Cursos, Usuarios con encapsulamiento
-- **Pipes**: Transformación de datos
-- **Directivas**: Componentes reutilizables
+#### Cursos (`/api/cursos`)
+| Método | Endpoint | Descripción | Roles |
+|--------|----------|-------------|-------|
+| GET | `/cursos` | Listar cursos | Todos |
+| POST | `/cursos` | Crear curso | Admin |
+| GET | `/cursos/{id}` | Ver curso | Todos |
+| PUT | `/cursos/{id}` | Actualizar curso | Admin |
+| DELETE | `/cursos/{id}` | Eliminar curso | Admin |
 
-### Arquitectura Modular
-- **Módulo Core**: Servicios singleton, guards, interceptores
-- **Módulo Shared**: Componentes compartidos
-- **Módulos Feature**: Dashboard, Cursos, Usuarios con lazy loading
-- **Módulo Auth**: Autenticación independiente
+#### Inscripciones (`/api/inscripciones`)
+| Método | Endpoint | Descripción | Roles |
+|--------|----------|-------------|-------|
+| GET | `/inscripciones` | Listar inscripciones | Admin, Profesor |
+| POST | `/inscripciones` | Crear inscripción | Admin, Estudiante |
+| GET | `/inscripciones/{id}` | Ver inscripción | Todos |
+| PUT | `/inscripciones/{id}` | Actualizar notas | Admin, Profesor |
+| DELETE | `/inscripciones/{id}` | Eliminar inscripción | Admin |
+| GET | `/cursos-disponibles` | Cursos para inscribirse | Estudiante |
+| GET | `/solicitudes-pendientes` | Solicitudes pendientes | Admin |
+| POST | `/inscripciones/{id}/aprobar` | Aprobar solicitud | Admin |
+| POST | `/inscripciones/{id}/rechazar` | Rechazar solicitud | Admin |
 
-### Guards y Enrutamiento
-- **AuthGuard**: Protege rutas que requieren autenticación
-- **RoleGuard**: Controla acceso según rol de usuario
-- **Rutas públicas**: Login, registro
-- **Rutas protegidas**: Dashboard, gestión de cursos y usuarios
+### Ejemplo de Servicio Angular
 
-### HttpInterceptor
-- Inyecta automáticamente el token JWT en cada petición
-- Centraliza la lógica de autenticación
-- Manejo de errores HTTP
+```typescript
+// core/services/inscripciones.ts
+@Injectable({ providedIn: 'root' })
+export class Inscripciones {
+  private apiUrl = `${environment.apiUrl}/inscripciones`;
+  
+  constructor(private http: HttpClient) {}
 
-### Lazy Loading
-- Carga diferida de módulos por rutas
-- Mejora el rendimiento inicial
-- Reduce el bundle size
+  getAll(): Observable<Inscripcion[]> {
+    return this.http.get<Inscripcion[]>(this.apiUrl).pipe(
+      catchError(this.handleError)
+    );
+  }
 
-## Desarrollo Técnico
+  create(data: { estudiante_id: number; curso_id: number }): Observable<Inscripcion> {
+    return this.http.post<Inscripcion>(this.apiUrl, data).pipe(
+      catchError(this.handleError)
+    );
+  }
 
-### Presentación Técnica
-
-**Documento PDF incluye:**
-1. Explicación de rutas y guards implementados
-2. Integración de servicios REST
-3. Enlace al repositorio GitHub
-4. Instrucciones de instalación y ejecución
-
-### Criterios de Evaluación Cumplidos
-
-#### Programación Orientada a Objetos (4 puntos)
-✅ Arquitectura escalable y fácil de mantener  
-✅ Separación clara entre componentes, servicios y modelos  
-✅ Pipes y directivas personalizados
-
-#### Enrutamiento Dividido (4 puntos)
-✅ Lazy loading implementado  
-✅ Rutas protegidas y públicas  
-✅ Navegación múltiple inexistente (SPA)
-
-#### Guards Múltiples (4 puntos)
-✅ AuthGuard para autenticación  
-✅ RoleGuard para control de acceso  
-✅ Gestión denegada según rol de usuario
-
-#### Integración con API REST (4 puntos)
-✅ HttpClient integrado  
-✅ Peticiones GET, POST, PUT, DELETE  
-✅ Separación adecuada de errores  
-✅ Manejo centralizado con Observables
-
-#### HttpInterceptor (4 puntos)
-✅ Token insertado automáticamente  
-✅ Validación y manejo de errores  
-✅ Gestión global de flujo de datos
-
-## Pruebas
-
-### Crear Usuario Administrador (vía API)
-```bash
-POST http://localhost:8000/api/auth/register
-Content-Type: application/json
-
-{
-  "name": "Admin",
-  "email": "admin@test.com",
-  "password": "123456",
-  "role": "admin"
+  update(id: number, data: Partial<Inscripcion>): Observable<Inscripcion> {
+    return this.http.put<Inscripcion>(`${this.apiUrl}/${id}`, data).pipe(
+      catchError(this.handleError)
+    );
+  }
 }
 ```
 
-### Login
+---
+
+## 📊 Sistema de Calificaciones
+
+### Fórmula de Promedio
+```
+Promedio = (Nota Parcial × 0.40) + (Nota Final × 0.60)
+```
+
+### Estados de Inscripción
+| Estado | Descripción | Transiciones |
+|--------|-------------|--------------|
+| `pendiente` | Solicitud enviada | → inscrito, rechazado |
+| `inscrito` | Aprobado por admin | → en_progreso |
+| `en_progreso` | Con al menos una nota | → completado, abandonado |
+| `completado` | Ambas notas registradas | - |
+| `abandonado` | Marcado por admin | - |
+| `rechazado` | Solicitud denegada | - |
+
+---
+
+## 🚀 Instalación y Configuración
+
+### Prerrequisitos
+- PHP 8.3+
+- Composer 2.x
+- Node.js 18+
+- npm 9+
+- MySQL 8.0+
+- Laragon (recomendado para Windows)
+
+### 1. Clonar el Repositorio
+```bash
+git clone https://github.com/vansfanelx/gestion-cursos.git
+cd gestion-cursos
+```
+
+### 2. Configuración del Backend (Laravel)
+
+```bash
+# Navegar al directorio del backend
+cd backend
+
+# Instalar dependencias
+composer install
+
+# Copiar archivo de configuración
+copy .env.example .env
+
+# Configurar variables de entorno en .env
+# DB_DATABASE=gestion_cursos
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# Generar clave de aplicación
+php artisan key:generate
+
+# Generar clave JWT
+php artisan jwt:secret
+
+# Ejecutar migraciones
+php artisan migrate
+
+# (Opcional) Poblar con datos de prueba
+php artisan db:seed
+
+# Iniciar servidor
+php artisan serve
+```
+
+**El backend estará en:** `http://localhost:8000`
+
+### 3. Configuración del Frontend (Angular)
+
+```bash
+# Navegar al directorio del frontend
+cd frontend
+
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+ng serve
+```
+
+**El frontend estará en:** `http://localhost:4200`
+
+### 4. Usuarios de Prueba (después de db:seed)
+
+| Rol | Email | Contraseña |
+|-----|-------|------------|
+| Admin | admin@test.com | 123456 |
+| Profesor | profesor@test.com | 123456 |
+| Estudiante | estudiante@test.com | 123456 |
+
+---
+
+## ✅ Pruebas Funcionales
+
+### 1. Prueba de Autenticación
+
+**Login exitoso:**
 ```bash
 POST http://localhost:8000/api/auth/login
 Content-Type: application/json
@@ -353,17 +489,141 @@ Content-Type: application/json
 }
 ```
 
-## Problemas Conocidos y Soluciones
+**Respuesta esperada:**
+```json
+{
+  "access_token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "token_type": "bearer",
+  "expires_in": 3600,
+  "user": {
+    "id": 1,
+    "name": "Administrador",
+    "email": "admin@test.com",
+    "role": "admin"
+  }
+}
+```
 
-1. **Error CORS**: Verificar que `config/cors.php` permite el origen de Angular
-2. **JWT Token inválido**: Regenerar secret con `php artisan jwt:secret`
-3. **Error de migraciones**: Verificar conexión a base de datos en `.env`
+### 2. Prueba de Guards
 
-## Contacto
+| Escenario | Resultado Esperado |
+|-----------|-------------------|
+| Usuario no autenticado accede a `/dashboard` | Redirige a `/auth/login` |
+| Estudiante accede a `/inscripciones` | Redirige a `/dashboard` |
+| Profesor accede a `/cursos-disponibles` | Redirige a `/dashboard` |
+| Admin accede a cualquier ruta | ✅ Acceso permitido |
 
-**Jonathan Jiménez Rojas**  
-GitHub: [https://github.com/vansfanelx](https://github.com/vansfanelx)
+### 3. Prueba de Permisos por Rol
+
+**Admin:**
+- ✅ Crear/Editar/Eliminar cursos
+- ✅ Crear/Editar/Eliminar usuarios
+- ✅ Aprobar/Rechazar solicitudes de inscripción
+- ✅ Ver todas las inscripciones
+
+**Profesor:**
+- ❌ Crear/Eliminar cursos
+- ✅ Ver sus cursos asignados
+- ✅ Editar notas de sus estudiantes
+- ✅ Ver inscripciones de sus cursos
+- ❌ Editar usuarios
+
+**Estudiante:**
+- ✅ Ver cursos disponibles
+- ✅ Solicitar inscripción
+- ✅ Ver sus inscripciones y notas
+- ❌ Acceder a gestión de usuarios/cursos
+
+### 4. Prueba de CRUD de Inscripciones
+
+```bash
+# Crear inscripción (Admin)
+POST http://localhost:8000/api/inscripciones
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "estudiante_id": 3,
+  "curso_id": 1
+}
+
+# Actualizar notas (Profesor)
+PUT http://localhost:8000/api/inscripciones/1
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "nota_parcial": 15.5,
+  "nota_final": 17.0
+}
+
+# Respuesta esperada (promedio calculado automáticamente)
+{
+  "id": 1,
+  "nota_parcial": 15.5,
+  "nota_final": 17.0,
+  "promedio": 16.4,
+  "estado": "completado"
+}
+```
 
 ---
 
-Fecha de desarrollo: Diciembre 2025
+## 📝 Criterios de Evaluación Cumplidos
+
+### Programación Orientada a Objetos (4 puntos)
+✅ Arquitectura modular escalable  
+✅ Separación de responsabilidades (Controllers, Services, Models)  
+✅ Componentes reutilizables (SearchSelect, ConfirmModal)  
+✅ Pipes personalizados (FilterPipe, SearchFilterPipe)
+
+### Enrutamiento Dividido (4 puntos)
+✅ Lazy Loading por módulos funcionales  
+✅ Rutas protegidas y públicas  
+✅ Navegación SPA sin recargas
+
+### Guards Múltiples (4 puntos)
+✅ AuthGuard para rutas autenticadas  
+✅ RoleGuard para control por rol  
+✅ Redirecciones apropiadas según permisos
+
+### Integración con API REST (4 puntos)
+✅ HttpClient con Observables  
+✅ Operaciones CRUD completas  
+✅ Manejo de errores centralizado  
+✅ Servicios independientes por entidad
+
+### HttpInterceptor (4 puntos)
+✅ Inyección automática de JWT  
+✅ Manejo global de errores HTTP  
+✅ Redirección automática en token expirado
+
+---
+
+## 🔧 Solución de Problemas
+
+| Problema | Solución |
+|----------|----------|
+| Error CORS | Verificar `FRONTEND_URL` en `.env` del backend |
+| JWT inválido | Ejecutar `php artisan jwt:secret` |
+| Error de migraciones | Verificar conexión a BD en `.env` |
+| Loading infinito | Verificar que el backend esté corriendo |
+| 401 Unauthorized | Token expirado, volver a iniciar sesión |
+
+---
+
+## 📞 Contacto
+
+**Jonathan José Jiménez Rojas**  
+📧 Email: jonathan.jimenez@example.com  
+🐙 GitHub: [https://github.com/vansfanelx](https://github.com/vansfanelx)
+
+---
+
+## 📄 Licencia
+
+Este proyecto es de uso académico para el curso de Desarrollo de Interfaces - IDAT 2025.
+
+---
+
+*Última actualización: Diciembre 2025*

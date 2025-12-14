@@ -1,0 +1,133 @@
+<div class="solicitudes-container">
+  <div class="page-header">
+    <h2>📋 Solicitudes de Inscripción Pendientes</h2>
+    <p class="subtitle">Gestiona las solicitudes de inscripción de los estudiantes</p>
+  </div>
+
+  <!-- Mensajes -->
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <i class="fas fa-check-circle"></i> {{ successMessage }}
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger">
+      <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>
+  }
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando solicitudes...</p>
+    </div>
+  } @else {
+    @if (solicitudes.length === 0) {
+      <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <h3>No hay solicitudes pendientes</h3>
+        <p>Todas las solicitudes han sido procesadas.</p>
+      </div>
+    } @else {
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-number">{{ solicitudes.length }}</span>
+          <span class="stat-label">Solicitudes pendientes</span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th>Email</th>
+              <th>Curso</th>
+              <th>Profesor</th>
+              <th>Fecha Solicitud</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (solicitud of solicitudes; track solicitud.id) {
+              <tr>
+                <td>
+                  <div class="user-info">
+                    <div class="avatar">{{ solicitud.estudiante?.name?.charAt(0)?.toUpperCase() }}</div>
+                    <span>{{ solicitud.estudiante?.name }}</span>
+                  </div>
+                </td>
+                <td>{{ solicitud.estudiante?.email }}</td>
+                <td>
+                  <strong>{{ solicitud.curso?.nombre }}</strong>
+                  <br>
+                  <small class="text-muted">{{ solicitud.curso?.duracion }} horas</small>
+                </td>
+                <td>{{ solicitud.curso?.profesor?.name || 'Sin asignar' }}</td>
+                <td>{{ formatFecha(solicitud.fecha_solicitud) }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn btn-success btn-sm" (click)="aprobar(solicitud)" title="Aprobar">
+                      <i class="fas fa-check"></i> Aprobar
+                    </button>
+                    <button class="btn btn-danger btn-sm" (click)="abrirModalRechazo(solicitud)" title="Rechazar">
+                      <i class="fas fa-times"></i> Rechazar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</div>
+
+<!-- Modal de Rechazo -->
+@if (showRechazarModal) {
+  <div class="modal-overlay" (click)="cerrarModalRechazo()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Rechazar Solicitud</h3>
+        <button class="btn-close" (click)="cerrarModalRechazo()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          ¿Estás seguro de rechazar la solicitud de 
+          <strong>{{ solicitudSeleccionada?.estudiante?.name }}</strong>
+          para el curso 
+          <strong>{{ solicitudSeleccionada?.curso?.nombre }}</strong>?
+        </p>
+        <div class="form-group">
+          <label for="motivo">Motivo del rechazo (opcional):</label>
+          <textarea 
+            id="motivo" 
+            [(ngModel)]="motivoRechazo" 
+            rows="3"
+            placeholder="Ingresa el motivo del rechazo..."
+            class="form-control"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModalRechazo()">Cancelar</button>
+        <button class="btn btn-danger" (click)="confirmarRechazo()">
+          <i class="fas fa-times"></i> Confirmar Rechazo
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Modal de Aprobación -->
+<app-confirm-modal
+  [show]="showAprobarModal"
+  [title]="'Aprobar Inscripción'"
+  [message]="'¿Aprobar la inscripción de <strong>' + (solicitudAprobar?.estudiante?.name || '') + '</strong> al curso <strong>' + (solicitudAprobar?.curso?.nombre || '') + '</strong>?'"
+  [confirmText]="'Aprobar'"
+  [danger]="false"
+  (confirmed)="confirmarAprobacion()"
+  (cancelled)="cancelarAprobacion()">
+</app-confirm-modal>

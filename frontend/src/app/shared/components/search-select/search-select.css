@@ -1,0 +1,12 @@
+.search-select { position: relative; }
+.control { display: flex; align-items: center; gap: 8px; border: 1px solid #d0d6e1; border-radius: 8px; padding: 8px 10px; background: #fff; }
+.search-select.disabled .control { background: #f2f4f7; cursor: not-allowed; }
+.search-select.disabled .input { color: #667085; }
+.input { flex: 1; border: none; outline: none; font-size: 14px; }
+.chevron { color: #667085; }
+.dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1px solid #d0d6e1; border-radius: 8px; max-height: 220px; overflow: auto; box-shadow: 0 8px 24px rgba(16,24,40,0.12); z-index: 10; }
+.option { padding: 8px 10px; cursor: pointer; }
+.option.selected { background: #eef2ff; }
+.option.highlighted { background: #f9fafb; }
+.empty { color: #98a2b3; padding: 10px; }
+mark { background: #fff3cd; color: #111; }

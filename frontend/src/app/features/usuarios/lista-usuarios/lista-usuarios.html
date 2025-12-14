@@ -1,6 +1,6 @@
 <div class="usuarios-container">
   <header class="page-header">
-    <h1>👥 Gestión de Usuarios</h1>
+    <h1>{{ pageTitle }}</h1>
   </header>
 
   <div class="toolbar">
@@ -8,21 +8,23 @@
       <input
         type="text"
         [(ngModel)]="searchText"
-        placeholder="Buscar por nombre, email o rol..."
+        [placeholder]="isProfesor ? 'Buscar estudiante por nombre o email...' : 'Buscar por nombre, email o rol...'"
         class="search-input"
       />
       <span class="search-icon">🔍</span>
     </div>
     <div class="toolbar-actions">
-      <select [(ngModel)]="filtroRole" class="filter-select">
-        <option value="todos">Todos los roles</option>
-        <option value="admin">Administradores</option>
-        <option value="profesor">Profesores</option>
-        <option value="estudiante">Estudiantes</option>
-      </select>
-      <button class="btn-add" [routerLink]="'/usuarios/nuevo'">
-        ➕ Nuevo Usuario
-      </button>
+      @if (isAdmin) {
+        <select [(ngModel)]="filtroRole" class="filter-select">
+          <option value="todos">Todos los roles</option>
+          <option value="admin">Administradores</option>
+          <option value="profesor">Profesores</option>
+          <option value="estudiante">Estudiantes</option>
+        </select>
+        <button class="btn-add" [routerLink]="'/usuarios/nuevo'">
+          ➕ Nuevo Usuario
+        </button>
+      }
     </div>
   </div>
 
@@ -43,15 +45,17 @@
           <tr>
             <th>Usuario</th>
             <th>Email</th>
-            <th>Rol</th>
+            @if (isAdmin) {
+              <th>Rol</th>
+            }
             <th class="actions-header">Acciones</th>
           </tr>
         </thead>
         <tbody>
           @if (usuariosFiltrados.length === 0) {
             <tr>
-              <td colspan="4" class="empty-state">
-                No se encontraron usuarios
+              <td [attr.colspan]="isAdmin ? 4 : 3" class="empty-state">
+                {{ isProfesor ? 'No tienes estudiantes inscritos en tus cursos' : 'No se encontraron usuarios' }}
               </td>
             </tr>
           } @else {
@@ -64,22 +68,26 @@
                   </div>
                 </td>
                 <td>{{ usuario.email }}</td>
-                <td>
-                  <span class="badge" [class]="getRoleClass(usuario.role)">
-                    {{ getRoleLabel(usuario.role) }}
-                  </span>
-                </td>
+                @if (isAdmin) {
+                  <td>
+                    <span class="badge" [class]="getRoleClass(usuario.role)">
+                      {{ getRoleLabel(usuario.role) }}
+                    </span>
+                  </td>
+                }
                 <td class="actions-cell">
                   <div class="action-buttons">
                     <button class="btn-icon btn-view" (click)="verDetalle(usuario.id)" title="Ver detalles">
                       👁️
                     </button>
-                    <button class="btn-icon btn-edit" (click)="editUsuario(usuario.id)" title="Editar">
-                      ✏️
-                    </button>
-                    <button class="btn-icon btn-delete" (click)="deleteUsuario(usuario.id, usuario.name)" title="Eliminar">
-                      🗑️
-                    </button>
+                    @if (isAdmin) {
+                      <button class="btn-icon btn-edit" (click)="editUsuario(usuario.id)" title="Editar">
+                        ✏️
+                      </button>
+                      <button class="btn-icon btn-delete" (click)="deleteUsuario(usuario.id, usuario.name)" title="Eliminar">
+                        🗑️
+                      </button>
+                    }
                   </div>
                 </td>
               </tr>

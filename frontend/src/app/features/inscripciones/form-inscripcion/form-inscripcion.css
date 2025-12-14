@@ -138,3 +138,97 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Estado display */
+.estado-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #f7f9fc;
+  border-radius: 8px;
+  border: 2px solid #edf1f7;
+}
+
+.estado-hint {
+  color: #8f9bb3;
+  font-size: 0.8rem;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.badge-inscrito {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.badge-progreso {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.badge-completado {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.badge-abandonado {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Checkbox abandonar */
+.form-group-full {
+  grid-column: 1 / -1;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #374151;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #dc2626;
+  cursor: pointer;
+}
+
+.hint {
+  display: block;
+  color: #9ca3af;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+/* Promedio box */
+.promedio-box {
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.promedio-box.pendiente {
+  background: #f3f4f6;
+  color: #9ca3af;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
