@@ -1,8 +1,8 @@
 # 🎓 Sistema de Gestión de Cursos
 
-**Autor:** Jimenez Rojas, Jonathan Jose
-           Revilla Huapaya, Javier Alberto
-           Talledo Ceverino, Andy Steve
+**Autor:** Jimenez Roja Jsonathan Jose, 
+           Revilla Huapaya Javier Alberto, 
+           Talledo Ceverino Andy Steve, 
           
 **GitHub:** [https://github.com/vansfanelx](https://github.com/vansfanelx)  
 **Curso:** Desarrollo de Interfaces  
