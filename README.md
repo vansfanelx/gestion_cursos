@@ -3,6 +3,7 @@
 **Autor:** Jimenez Rojas, Jonathan Jose
            Revilla Huapaya, Javier Alberto
            Talledo Ceverino, Andy Steve
+          
 **GitHub:** [https://github.com/vansfanelx](https://github.com/vansfanelx)  
 **Curso:** Desarrollo de Interfaces  
 **Fecha:** Diciembre 2025
